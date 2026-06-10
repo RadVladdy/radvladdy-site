@@ -26,16 +26,21 @@ committed files. Leak-scan the diff before every commit.
 | `--green` | `#39d353` | terminal/chain data only (ticker, dashboard) |
 
 All-mono typography (system mono stack — no webfonts, no third-party
-requests). Motifs: prompt-style header (`vlad@radvladdy:~$`), blinking cursor,
-film grain overlay, glitch-on-hover wordmark, city skyline with flickering
-windows. Only external call: mempool.space API for the ticker (client-side).
+requests). Motifs: prompt-style header (`rad@radvladdy:~$`), blinking cursor,
+film grain overlay, glitch-on-hover wordmark, photographic cityscape hero
+backdrop (`public/images/skyline.jpg`) under a heavy dark overlay (the
+`.hero-band` gradient — keep text-over-photo contrast high), and the flat SVG
+skyline strip as a foreground silhouette with flickering windows. Only
+external call: mempool.space API for the ticker (client-side).
 
 ## Identity rails
 
-- NIP-05: `public/.well-known/nostr.json` — `_` and `vlad` → the RadVladdy
+- NIP-05: `public/.well-known/nostr.json` — `_` and `rad` → the RadVladdy
   pubkey. Served static; CORS header in `public/_headers`; must never redirect.
-- Lightning address `vlad@radvladdy.com`: `src/worker.js` lnurlp proxy —
+- Lightning address `rad@radvladdy.com`: `src/worker.js` lnurlp proxy —
   upstream endpoint not yet wired (see the `LNURLP_UPSTREAM` map).
+- The canonical person-string is **`rad@`** (it's Rad Vladdy), locked
+  2026-06-10. `_@` also maps for the bare-domain NIP-05 badge.
 
 ## Verify before push
 

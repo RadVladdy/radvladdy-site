@@ -14,8 +14,8 @@
 // reaches this worker.
 
 const LNURLP_UPSTREAM = {
-  // vlad: '<provider lnurlp endpoint>' — wire up when the personal Lightning
-  // address backend is chosen; the public address becomes vlad@radvladdy.com.
+  // rad: '<provider lnurlp endpoint>' — wire up when the personal Lightning
+  // address backend is chosen; the public address becomes rad@radvladdy.com.
   // Swapping a name's backend later is a one-line change here; the public
   // address never changes.
 };

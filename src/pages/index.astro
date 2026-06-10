@@ -17,13 +17,14 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://radvladdy.com/images/avatar.jpg" />
     <meta name="twitter:card" content="summary" />
-    <meta name="lightning" content="vlad@radvladdy.com" />
+    <meta name="lightning" content="rad@radvladdy.com" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
 
+    <div class="hero-band">
     <header>
-      <span class="prompt">vlad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></span>
+      <span class="prompt">rad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></span>
       <nav>
         <a href="#projects">/projects</a>
         <a href="#soon">/soon</a>
@@ -53,6 +54,7 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
         </div>
       </section>
     </main>
+    </div>
 
     <div class="skyline" aria-hidden="true">
       <svg viewBox="0 0 760 80" preserveAspectRatio="none">
@@ -118,7 +120,7 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
     </main>
 
     <footer>
-      <span><span class="cy">⚡ vlad@radvladdy.com</span> <span class="dim">· nip-05 · zaps soon</span></span>
+      <span><span class="cy">⚡ rad@radvladdy.com</span> <span class="dim">· nip-05 · zaps soon</span></span>
       <span class="dim">verify, don't trust · tick tock next block</span>
     </footer>
 
@@ -168,6 +170,15 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
         font-family: var(--mono);
         font-size: 15px;
         line-height: 1.7;
+      }
+      .hero-band {
+        background:
+          linear-gradient(
+            rgba(11, 15, 20, 0.9),
+            rgba(11, 15, 20, 0.78) 55%,
+            rgba(11, 15, 20, 0.97)
+          ),
+          url('/images/skyline.jpg') center 30% / cover no-repeat;
       }
       .grain {
         position: fixed; inset: 0; pointer-events: none; z-index: 9; opacity: 0.05;
