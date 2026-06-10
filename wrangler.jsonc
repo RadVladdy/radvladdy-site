@@ -1,0 +1,9 @@
+{
+  "name": "radvladdy-site",
+  "compatibility_date": "2026-06-01",
+  "main": "src/worker.js",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  }
+}
