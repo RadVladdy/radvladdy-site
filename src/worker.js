@@ -13,11 +13,10 @@
 // The NIP-05 endpoint (/.well-known/nostr.json) is a static asset and never
 // reaches this worker.
 
+// Swapping a name's backend is a one-line change here; the public address
+// never changes.
 const LNURLP_UPSTREAM = {
-  // rad: '<provider lnurlp endpoint>' — wire up when the personal Lightning
-  // address backend is chosen; the public address becomes rad@radvladdy.com.
-  // Swapping a name's backend later is a one-line change here; the public
-  // address never changes.
+  rad: 'https://zeuspay.com/.well-known/lnurlp/intelligentdragon65',
 };
 
 const JSON_HEADERS = {

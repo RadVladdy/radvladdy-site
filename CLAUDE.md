@@ -46,8 +46,10 @@ candidate.
 
 - NIP-05: `public/.well-known/nostr.json` — `_` and `rad` → the RadVladdy
   pubkey. Served static; CORS header in `public/_headers`; must never redirect.
-- Lightning address `rad@radvladdy.com`: `src/worker.js` lnurlp proxy —
-  upstream endpoint not yet wired (see the `LNURLP_UPSTREAM` map).
+- Lightning address `rad@radvladdy.com`: `src/worker.js` lnurlp proxy →
+  upstream is a ZEUS Pay ecash (Cashu) address — always-on receive via the
+  mint, zap receipts via `allowsNostr`. Backend swap = one line in
+  `LNURLP_UPSTREAM`; the public address never changes.
 - The canonical person-string is **`rad@`** (it's Rad Vladdy), locked
   2026-06-10. `_@` also maps for the bare-domain NIP-05 badge.
 
