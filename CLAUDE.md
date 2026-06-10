@@ -27,11 +27,20 @@ committed files. Leak-scan the diff before every commit.
 
 All-mono typography (system mono stack — no webfonts, no third-party
 requests). Motifs: prompt-style header (`rad@radvladdy:~$`), blinking cursor,
-film grain overlay, glitch-on-hover wordmark, photographic cityscape hero
-backdrop (`public/images/skyline.jpg`) under a heavy dark overlay (the
-`.hero-band` gradient — keep text-over-photo contrast high), and the flat SVG
-skyline strip as a foreground silhouette with flickering windows. Only
-external call: mempool.space API for the ticker (client-side).
+film grain overlay, glitch-on-hover wordmark, the **hero video backdrop**
+(rainy street scene, `public/videos/hero.mp4`) under a heavy dark overlay
+(the `.hero-band::after` gradient — keep text-over-video contrast high), and
+the flat SVG skyline strip as a foreground silhouette with flickering
+windows. Only external call: mempool.space API for the ticker (client-side).
+
+Hero video rules: **desktop-only** (the inline script gates on
+`min-width: 700px`, `prefers-reduced-motion`, and `saveData` — mobile and
+reduced-motion users get the static `images/hero-still.jpg`, which is a frame
+of the same video, so the looks match). Always `muted loop playsinline
+preload="none"`; never autoplay audio. Keep the file ≲6 MB (current: 960×540
+H.264 via `avconvert --preset Preset960x540`). `images/skyline.jpg` (golden
+Bitcoin-moon panorama) is an unused-but-kept asset — og-banner / Phase B
+candidate.
 
 ## Identity rails
 

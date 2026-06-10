@@ -23,6 +23,7 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
     <div class="grain" aria-hidden="true"></div>
 
     <div class="hero-band">
+    <video class="hero-video" muted loop playsinline preload="none" aria-hidden="true"></video>
     <header>
       <span class="prompt">rad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></span>
       <nav>
@@ -125,6 +126,18 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
     </footer>
 
     <script is:inline>
+      (() => {
+        const v = document.querySelector('.hero-video');
+        if (!v) return;
+        const wide = matchMedia('(min-width: 700px)').matches;
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const saveData = navigator.connection && navigator.connection.saveData;
+        if (wide && !reduced && !saveData) {
+          v.src = '/videos/hero.mp4';
+          v.play().catch(() => {});
+        }
+      })();
+
       (async () => {
         const $ = (id) => document.getElementById(id);
         const fmt = (n) => n.toLocaleString('en-US');
@@ -172,13 +185,37 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
         line-height: 1.7;
       }
       .hero-band {
-        background:
-          linear-gradient(
-            rgba(11, 15, 20, 0.9),
-            rgba(11, 15, 20, 0.78) 55%,
-            rgba(11, 15, 20, 0.97)
-          ),
-          url('/images/skyline.jpg') center 30% / cover no-repeat;
+        position: relative;
+        overflow: hidden;
+        background: url('/images/hero-still.jpg') center 40% / cover no-repeat;
+      }
+      .hero-band::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(
+          rgba(11, 15, 20, 0.9),
+          rgba(11, 15, 20, 0.78) 55%,
+          rgba(11, 15, 20, 0.97)
+        );
+      }
+      .hero-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+      .hero-band header,
+      .hero-band main {
+        position: relative;
+        z-index: 2;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-video { display: none; }
       }
       .grain {
         position: fixed; inset: 0; pointer-events: none; z-index: 9; opacity: 0.05;
