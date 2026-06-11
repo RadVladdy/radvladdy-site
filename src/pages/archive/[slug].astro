@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('archive');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.date.toISOString().slice(0, 10);
+---
+<Site title={`${post.data.title} — RadVladdy archive`} description={`From the archive (${date}), preserved verbatim.`}>
+  <p class="sec-label">~/archive · {post.data.kind}</p>
+  <h1>{post.data.title}</h1>
+  <p class="byline">
+    originally published {date} · preserved verbatim · <a href="/archive">back to the archive</a>
+  </p>
+  <div class="prose">
+    <Content />
+  </div>
+</Site>

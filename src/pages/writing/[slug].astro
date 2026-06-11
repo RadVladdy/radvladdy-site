@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.date.toISOString().slice(0, 10);
+const block = post.data.block;
+const proof = `/proofs/${post.id}.md.ots`;
+const source = `/proofs/${post.id}.md`;
+---
+<Site title={`${post.data.title} — RadVladdy`} description={post.data.subtitle ?? post.data.title}>
+  <h1>{post.data.title}</h1>
+  {post.data.subtitle && <p class="post-subtitle">{post.data.subtitle}</p>}
+  <p class="byline">
+    posted {date}{block && <> · block {block.toLocaleString('en-US')}</>} ·
+    <a href={proof}> proof ↗</a> · <a href={source}>source</a> · <a href="/verify">how to verify</a>
+  </p>
+  <div class="prose">
+    <Content />
+  </div>
+  <div class="zap-box">
+    ⚡ <b>Zap this post:</b> <code>rad@radvladdy.com</code> — sats land whether my phone is on or not.
+    Disagreements also accepted at that address.
+  </div>
+</Site>

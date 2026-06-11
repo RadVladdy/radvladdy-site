@@ -1,5 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
 const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
+const latest = (await getCollection('writing'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
 ---
 <!doctype html>
 <html lang="en">
@@ -27,8 +31,9 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
     <header>
       <span class="prompt">rad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></span>
       <nav>
-        <a href="#projects">/projects</a>
-        <a href="#soon">/soon</a>
+        <a href="/writing">/writing</a>
+        <a href="/library">/library</a>
+        <a href="/archive">/archive</a>
         <a href="#connect">/connect</a>
       </nav>
     </header>
@@ -42,11 +47,12 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
           <p class="about">
             Bitcoin took my attention years ago and never gave it back. I write about
             the money, the rails, and the exit — and I build tools and guides for
-            people (and machines) finding their way out of the legacy system. This
-            site is being rebuilt from the studs. The writing returns soon.
+            people (and machines) finding their way out of the legacy system. The
+            site was rebuilt from the studs this month. The writing is back.
           </p>
           <div class="ctas">
-            <a class="btn btn-solid" href="https://bitcoineconomy.ai">bitcoineconomy.ai →</a>
+            <a class="btn btn-solid" href="/writing">read the writing →</a>
+            <a class="btn" href="https://bitcoineconomy.ai">bitcoineconomy.ai</a>
             <a class="btn" href={`https://njump.me/${npub}`}>nostr</a>
           </div>
         </div>
@@ -100,13 +106,18 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
         </div>
       </section>
 
-      <section id="soon">
-        <p class="sec-label">~/soon</p>
-        <p class="body-text">
-          What's coming: essays, signal boosts from writers worth your time, tool
-          recommendations, and a live chain dashboard. The Bitcoin-education site
-          that lived here before is archived — this rebuild starts from block zero.
-          RSS when it ships.
+      <section id="writing">
+        <p class="sec-label">~/writing — latest</p>
+        {latest.map((p) => (
+          <a class="post-row" href={`/writing/${p.id}`}>
+            <span class="post-title">{p.data.title}</span>
+            <span class="post-date">{p.data.date.toISOString().slice(0, 10)}</span>
+          </a>
+        ))}
+        <p class="body-text" style="margin-top: 12px;">
+          <a class="more-link" href="/writing">all writing →</a> ·
+          <a class="more-link" href="/library"> the library →</a> ·
+          <a class="more-link" href="/archive"> the 2019–2021 archive →</a>
         </p>
       </section>
 
@@ -122,7 +133,7 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
 
     <footer>
       <span><span class="cy">⚡ rad@radvladdy.com</span> <span class="dim">· nip-05 · zaps</span></span>
-      <span class="dim">verify, don't trust · tick tock next block</span>
+      <span class="dim"><a class="foot-link" href="/rss.xml">rss</a> · <a class="foot-link" href="/verify">verify, don't trust</a> · tick tock next block</span>
     </footer>
 
     <script is:inline>
@@ -298,6 +309,17 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
       .card-name { color: var(--text); font-size: 15px; }
       .card-desc { color: var(--dim); font-size: 13px; line-height: 1.6; }
       .body-text { color: var(--dim); font-size: 14px; max-width: 60ch; margin: 0; }
+      .post-row {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+        padding: 10px 2px; border-top: 1px solid var(--line); text-decoration: none;
+      }
+      .post-row:last-of-type { border-bottom: 1px solid var(--line); }
+      .post-title { color: var(--text); font-size: 14px; }
+      .post-row:hover .post-title { color: var(--cyan); }
+      .post-date { color: var(--dim); font-size: 12px; white-space: nowrap; }
+      .more-link { color: var(--cyan); text-decoration: none; }
+      .foot-link { color: var(--dim); }
+      .foot-link:hover { color: var(--cyan); }
       .links { list-style: none; margin: 0; padding: 0; }
       .links li { border-top: 1px solid var(--line); }
       .links li:last-child { border-bottom: 1px solid var(--line); }

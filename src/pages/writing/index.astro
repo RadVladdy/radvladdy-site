@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+<Site title="writing — RadVladdy" description="Essays, signal, and recommendations from the Bitcoin frontier.">
+  <p class="sec-label">~/writing</p>
+  <h1>Writing</h1>
+  <p class="intro">
+    Essays, signal boosts, and recommendations. Every post is timestamped onto Bitcoin —
+    see <a href="/verify">/verify</a>. Older work (2019–2021) lives in <a href="/archive">the archive</a>.
+  </p>
+  <div style="margin-top: 18px;">
+    {posts.map((p) => (
+      <a class="list-item" href={`/writing/${p.id}`}>
+        <span>
+          <span class="t">{p.data.title}</span>
+          {p.data.subtitle && <span class="dim" style="display:block; font-size:13px;">{p.data.subtitle}</span>}
+        </span>
+        <span class="d">{fmt(p.data.date)}</span>
+      </a>
+    ))}
+  </div>
+</Site>

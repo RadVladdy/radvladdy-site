@@ -1,0 +1,131 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'RadVladdy — writing, projects, and signal from the Bitcoin frontier.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0b0f14" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://radvladdy.com/images/avatar.jpg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="lightning" content="rad@radvladdy.com" />
+    <link rel="alternate" type="application/rss+xml" title="RadVladdy" href="/rss.xml" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header>
+      <a class="prompt" href="/">rad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></a>
+      <nav>
+        <a href="/writing">/writing</a>
+        <a href="/library">/library</a>
+        <a href="/archive">/archive</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <span><span class="cy">⚡ rad@radvladdy.com</span> <span class="dim">· nip-05 · zaps</span></span>
+      <span class="dim"><a href="/rss.xml">rss</a> · <a href="/verify">verify</a> · tick tock next block</span>
+    </footer>
+    <style is:global>
+      :root {
+        --bg: #0b0f14;
+        --panel: #11161d;
+        --line: #1f2630;
+        --text: #e6edf3;
+        --dim: #8b949e;
+        --cyan: #22d3ee;
+        --orange: #f7931a;
+        --green: #39d353;
+        --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      html { background: var(--bg); }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      .grain {
+        position: fixed; inset: 0; pointer-events: none; z-index: 9; opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+      }
+      header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; flex-wrap: wrap;
+        max-width: 760px; margin: 0 auto; padding: 22px 20px 10px;
+      }
+      .prompt { font-size: 14px; color: var(--text); text-decoration: none; }
+      .cursor { animation: blink 1.2s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      nav { display: flex; gap: 18px; }
+      nav a { color: var(--dim); text-decoration: none; font-size: 13px; }
+      nav a:hover { color: var(--cyan); }
+      main { max-width: 720px; margin: 0 auto; padding: 18px 20px 0; }
+      .cy { color: var(--cyan); }
+      .dim { color: var(--dim); }
+      footer {
+        display: flex; flex-wrap: wrap; gap: 6px 24px; justify-content: space-between;
+        max-width: 760px; margin: 44px auto 0; padding: 16px 20px 28px;
+        border-top: 1px solid var(--line); font-size: 12px;
+      }
+      footer a { color: var(--dim); }
+      footer a:hover { color: var(--cyan); }
+      h1 { font-size: 30px; line-height: 1.25; letter-spacing: -0.5px; margin: 18px 0 6px; }
+      .post-subtitle { color: var(--cyan); font-size: 16px; margin: 0 0 10px; font-style: italic; }
+      .byline {
+        color: var(--dim); font-size: 12.5px; margin: 0 0 26px;
+        padding-bottom: 14px; border-bottom: 1px solid var(--line);
+      }
+      .byline a { color: var(--cyan); text-decoration: none; }
+      .prose h2 { font-size: 20px; margin: 34px 0 10px; }
+      .prose p { margin: 0 0 16px; }
+      .prose a { color: var(--cyan); }
+      .prose blockquote { border-left: 2px solid var(--cyan); margin: 0 0 16px; padding: 2px 0 2px 16px; color: var(--dim); }
+      .prose hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+      .prose code { background: var(--panel); padding: 1px 6px; border-radius: 4px; font-size: 13.5px; }
+      .prose ol, .prose ul { margin: 0 0 16px; padding-left: 24px; }
+      .prose li { margin-bottom: 6px; }
+      .prose em { color: inherit; }
+      .zap-box {
+        margin: 34px 0 0; padding: 16px 18px;
+        background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+        font-size: 13.5px;
+      }
+      .zap-box b { color: var(--cyan); font-weight: 500; }
+      .list-item {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+        padding: 13px 2px; border-top: 1px solid var(--line); text-decoration: none;
+      }
+      .list-item:last-of-type { border-bottom: 1px solid var(--line); }
+      .list-item .t { color: var(--text); font-size: 15px; }
+      .list-item .d { color: var(--dim); font-size: 12px; white-space: nowrap; }
+      .list-item:hover .t { color: var(--cyan); }
+      .pill {
+        font-size: 11px; padding: 1px 8px; border-radius: 4px; border: 1px solid var(--dim);
+        color: var(--dim); white-space: nowrap;
+      }
+      .pill.original { color: var(--green); border-color: var(--green); }
+      .pill.repost, .pill.retweet { color: var(--orange); border-color: var(--orange); }
+      .sec-label { color: var(--dim); font-size: 12px; letter-spacing: 1px; margin: 26px 0 6px; }
+      .intro { color: var(--dim); font-size: 14px; }
+      .intro a { color: var(--cyan); }
+      @media (max-width: 600px) { h1 { font-size: 25px; } }
+    </style>
+  </body>
+</html>

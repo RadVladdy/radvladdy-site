@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+const posts = (await getCollection('archive')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+<Site title="archive — RadVladdy" description="The 2019–2021 posts, preserved verbatim with their original dates.">
+  <p class="sec-label">~/archive</p>
+  <h1>The archive</h1>
+  <p class="intro">
+    This site's previous life (2019–2021): a Bitcoin education blog for "family, friends,
+    and random humanoids." Preserved verbatim with original publication dates — including
+    the breathless price models, <em>especially</em> those. Receipts or it didn't happen.
+    Images and embeds hosted on the old server are gone; the words survive.
+    Dates here rest on the original platform records — everything new is
+    <a href="/verify">timestamped on Bitcoin</a> instead.
+  </p>
+  <div style="margin-top: 18px;">
+    {posts.map((p) => (
+      <a class="list-item" href={`/archive/${p.id}`}>
+        <span class="t">{p.data.title}</span>
+        <span class="d">{fmt(p.data.date)} <span class={`pill ${p.data.kind}`}>{p.data.kind}</span></span>
+      </a>
+    ))}
+  </div>
+</Site>

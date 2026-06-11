@@ -1,0 +1,35 @@
+---
+import Site from '../layouts/Site.astro';
+---
+<Site title="verify — RadVladdy" description="Every post on this site is timestamped onto Bitcoin. Here's how to check.">
+  <p class="sec-label">~/verify</p>
+  <h1>Verify this blog</h1>
+  <div class="prose">
+    <p>
+      Every post published on this site is timestamped onto Bitcoin using
+      <a href="https://opentimestamps.org">OpenTimestamps</a>. The post's byline links two files:
+      the <strong>source</strong> (the exact markdown the proof covers) and the
+      <strong>proof</strong> (a small <code>.ots</code> file anchoring that exact text to the timechain).
+    </p>
+    <h2>Check a post in three steps</h2>
+    <ol>
+      <li>From any post's byline, download both <em>source</em> and <em>proof</em>.</li>
+      <li>Go to <a href="https://opentimestamps.org">opentimestamps.org</a> and drag both files into the verifier.</li>
+      <li>Read the result: it names the Bitcoin block that anchors the file — proof the exact text existed by that date.</li>
+    </ol>
+    <p>
+      Command-line types: <code>ots verify post.md.ots</code> against a local Bitcoin node, no third
+      parties involved at all.
+    </p>
+    <h2>The honest fine print</h2>
+    <p>
+      A proof shows the text <em>existed by</em> a date, unchanged since — not that it's true, wise,
+      or even mine. Freshly published posts may show a <em>pending</em> attestation for a few hours
+      until the anchor confirms; proofs here get upgraded once they do. And the
+      <a href="/archive">2019–2021 archive</a> predates this practice — you can't notarize the past
+      with a clock you only started using today. Old dates rest on old-fashioned evidence; everything
+      new rests on Bitcoin.
+    </p>
+    <p>Verify, don't trust. Even me. <em>Especially</em> me.</p>
+  </div>
+</Site>

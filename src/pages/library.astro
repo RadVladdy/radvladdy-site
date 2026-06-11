@@ -1,0 +1,102 @@
+---
+import Site from '../layouts/Site.astro';
+
+const sections: { label: string; items: { name: string; meta?: string; why: string; href?: string }[] }[] = [
+  {
+    label: 'start here (the doors)',
+    items: [
+      { name: '"What\'s the Problem?" — Joe Bryan', meta: 'video · intro', href: 'https://www.satsvsfiat.com', why: 'The best first hour in bitcoin right now. Builds the whole case from a toy island economy; send it to anyone, including your mom.' },
+      { name: 'The Bullish Case for Bitcoin — Vijay Boyapati', meta: 'essay · intro→foundational', why: 'Was "Bitcoin 102" on the curriculum I built my family in 2020; has survived every revision since. The cleanest single argument in the canon.' },
+      { name: 'Dear family, dear friends — Gigi', meta: 'letter · intro', why: 'The letter I sent my own family instead of writing one. Still holds up.' },
+    ],
+  },
+  {
+    label: 'books',
+    items: [
+      { name: 'Broken Money — Lyn Alden', meta: 'foundational', why: 'The full machinery of fiat plumbing, by the clearest financial writer alive. Bitcoin becomes the obvious next thought rather than a leap.' },
+      { name: 'The Bitcoin Standard — Saifedean Ammous', meta: 'foundational', why: 'Monetary history with teeth. Read all of it, argue with some of it; both are the point.' },
+      { name: '21 Lessons — Gigi', meta: 'foundational · read LAST', why: 'Not how bitcoin works; what falling down the hole does to you. The capstone — it was "Bitcoin 401" on my old curriculum and still is.' },
+      { name: 'The Blocksize War — Jonathan Bier', meta: 'foundational→advanced', why: 'The war that decided what bitcoin is. Reads like a thriller about a parameter.' },
+      { name: 'Inventing Bitcoin — Yan Pritzker', meta: 'intro', why: 'The "how it works" book for normal people, readable in a weekend.' },
+      { name: 'Why Buy Bitcoin — Andy Edstrom', meta: 'intro→foundational', why: "On the 2020 list; a financial-advisor's-brain case." },
+    ],
+  },
+  {
+    label: 'essays & writers',
+    items: [
+      { name: 'Gigi', meta: 'dergigi.com', href: 'https://dergigi.com', why: 'The poet laureate of the space. Start with Bitcoin is Time.' },
+      { name: 'Parker Lewis — Gradually, Then Suddenly', why: "Patiently dismantles every objection you're currently forming, one essay per objection." },
+      { name: 'Lyn Alden', meta: 'lynalden.com', href: 'https://www.lynalden.com', why: 'Macro with receipts. The writer I point finance people at first.' },
+      { name: 'Robert Breedlove', why: 'The philosophical flank. Masters and Slaves of Money rearranged my furniture in 2020 — it\'s in my archive to prove it.' },
+      { name: 'Allen Farrington', why: 'Bitcoin is Venice and the debate-club register of the canon.' },
+      { name: 'Vijay Boyapati', why: 'See "start here." One great essay can be a whole career.' },
+    ],
+  },
+  {
+    label: 'podcasts',
+    items: [
+      { name: 'Bitcoin Audible — Guy Swann', why: 'The canon, read aloud with commentary. How busy people absorb the essays; successor to the Cryptoconomy feed I recommended in 2020.' },
+      { name: 'Stephan Livera Podcast', why: 'Technical-economic interviews, zero fluff; on my list since 2020.' },
+      { name: 'TFTC — Marty Bent', why: 'The grizzled daily pulse; rip-it-up energy since 2020 on my list.' },
+      { name: 'What is Money? — Robert Breedlove', meta: 'series', why: 'The Saylor Series sits in my archive as a 2021 repost; the long-form philosophy feed.' },
+    ],
+  },
+  {
+    label: 'video & youtube',
+    items: [
+      { name: 'Joe Bryan — "What\'s the Problem?"', why: 'See "start here."' },
+      { name: 'Lyn Alden — How Money and Banking Work', meta: 'talk · foundational', why: 'Broken Money in one sitting.' },
+      { name: 'Andreas Antonopoulos — talks & Q&A archive', meta: 'intro→advanced', why: 'The great explainer of the early era; the Q&A sessions still answer questions people ask daily.' },
+      { name: 'BTC Sessions', meta: 'tutorials · intro', why: 'Hands-on walkthroughs for wallets and tools.' },
+    ],
+  },
+  {
+    label: 'sites & tools',
+    items: [
+      { name: 'learnmeabitcoin.com', meta: 'foundational→advanced', href: 'https://learnmeabitcoin.com', why: 'The best technical explainer on the internet. Keys, transactions, blocks — in diagrams that respect you.' },
+      { name: 'mempool.space', meta: 'all levels', href: 'https://mempool.space', why: 'Watch the chain live. A small version of it beats on this site\'s homepage.' },
+      { name: 'Offchain Media', meta: 'foundational', why: 'Trust-model-first explainers of the layers above L1 — Lightning, ecash, Ark, L402 — that tell you plainly who holds what.' },
+      { name: 'Sats vs Fiat', meta: 'intro', href: 'https://www.satsvsfiat.com', why: 'Joe Bryan\'s free, multilingual home base around the video.' },
+      { name: 'checkonchain.com — James Check', meta: 'advanced', href: 'https://checkonchain.com', why: 'On-chain analytics without the paywall attitude.' },
+      { name: 'bitcoinvisuals.com', meta: 'advanced', href: 'https://bitcoinvisuals.com', why: 'Network charts for the data-hungry.' },
+    ],
+  },
+  {
+    label: 'courses & curricula',
+    items: [
+      { name: 'Looking Glass Education', meta: 'intro→foundational', why: 'Free-first, bitcoin-only, built by people I\'d trust with my reading list; Foundation Course then Deep Dives.' },
+      { name: 'PlanB Academy', meta: 'intro→advanced', why: 'Six tracks from first sats to protocol depth, directed by Giacomo Zucco; free tier first.' },
+      { name: 'Mi Primer Bitcoin — Bitcoin Diploma', meta: 'intro→foundational', why: 'The open-source grassroots curriculum that started in El Salvador and went global; the one I\'d point educators at.' },
+    ],
+  },
+];
+---
+<Site title="the library — RadVladdy" description="Every author, podcast, channel, site, and book I actually vouch for — by level, kept current.">
+  <p class="sec-label">~/library</p>
+  <h1>The Library</h1>
+  <p class="intro">
+    Everything here passed one filter: <em>I actually used it, and I'd hand it to someone I love.</em>
+    Levels are honest — <b>intro</b> (no background needed), <b>foundational</b> (you've had the
+    "wait, why is a <em>dollar</em> valuable?" moment), <b>advanced</b> (you know what a UTXO is and
+    aren't sorry). The list stays alive: things get added when they earn it and quietly removed when
+    they rot. If something great is missing, zap me a note.
+  </p>
+  {sections.map((s) => (
+    <section>
+      <p class="sec-label">~/library/{s.label}</p>
+      {s.items.map((i) => (
+        <div class="list-item" style="flex-direction: column; align-items: flex-start; gap: 2px;">
+          <span class="t">
+            {i.href ? <a href={i.href} style="color: inherit;">{i.name}</a> : i.name}
+            {i.meta && <span class="pill" style="margin-left: 10px;">{i.meta}</span>}
+          </span>
+          <span class="dim" style="font-size: 13px;">{i.why}</span>
+        </div>
+      ))}
+    </section>
+  ))}
+  <div class="zap-box">
+    <b>House rules:</b> nothing here is sponsored, affiliated, or paid for — vouching only.
+    Levels are mine. Disagreements welcome: ⚡ <code>rad@radvladdy.com</code> with a note.
+  </div>
+</Site>
