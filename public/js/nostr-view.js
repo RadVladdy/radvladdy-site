@@ -173,10 +173,19 @@ async function viewProfile(root, pubkey) {
   const banner = profile.banner && isHttp(profile.banner)
     ? `<div class="nv-banner" data-banner="${esc(profile.banner)}"></div>` : '';
   const nip05 = profile.nip05
-    ? `<span class="nv-nip05" data-nip05="${esc(profile.nip05)}">${esc(profile.nip05)}</span>` : '';
-  const lud16 = profile.lud16 ? `<span class="nv-lud16">⚡ ${esc(profile.lud16)}</span>` : '';
-  const website = profile.website && isHttp(profile.website)
-    ? `<a href="${esc(profile.website)}" rel="noopener nofollow">${esc(profile.website.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a>` : '';
+    ? `<span class="nv-nip05" data-nip05="${esc(profile.nip05)}"><span class="nv-tag">[NIP-05]</span> ${esc(profile.nip05)}</span>` : '';
+  const lud16 = profile.lud16 ? `<span class="nv-lud16"><span class="nv-bolt">⚡︎</span> ${esc(profile.lud16)}</span>` : '';
+  // The website badge is redundant when it just points back at the site
+  // you're already on.
+  let website = '';
+  if (profile.website && isHttp(profile.website)) {
+    try {
+      const host = new URL(profile.website).host.replace(/^www\./, '');
+      if (host !== location.host.replace(/^www\./, '')) {
+        website = `<a href="${esc(profile.website)}" rel="noopener nofollow">${esc(host)}</a>`;
+      }
+    } catch { /* unparseable url in kind-0 */ }
+  }
 
   root.innerHTML = `
     ${banner}
@@ -186,7 +195,8 @@ async function viewProfile(root, pubkey) {
         <div class="nv-name">${esc(profile.display_name || profile.name || shortBech(npub))}</div>
         <div class="nv-badges">${[nip05, lud16, website].filter(Boolean).join(' · ')}</div>
         <div class="nv-npub"><code>${npub}</code> <button class="nv-copy" data-copy="${npub}">copy</button>
-          <a class="nv-open" href="nostr:${npub}">open in client ↗</a></div>
+          <a class="nv-open" href="nostr:${npub}">open in app ↗</a>
+          <a class="nv-open" href="https://primal.net/p/${npub}" rel="noopener">web ↗</a></div>
       </div>
     </div>
     ${profile.about ? `<div class="nv-about">${renderContent(profile.about)}</div>` : ''}
@@ -272,7 +282,7 @@ async function viewNote(root, id) {
   root.innerHTML = `
     ${crumbs ? `<p class="nv-crumbs dim">${crumbs}</p>` : ''}
     ${noteCard(ev, profiles, zaps, { focus: true })}
-    <p class="nv-actions"><a href="nostr:${noteEncode(ev.id)}">open in client ↗</a> — reply or zap from there.</p>
+    <p class="nv-actions"><a href="nostr:${noteEncode(ev.id)}">open in app ↗</a> · <a href="https://primal.net/e/${noteEncode(ev.id)}" rel="noopener">web ↗</a> — reply or zap from there.</p>
     ${replyCount ? `<p class="sec-label">~/replies (${replyCount})</p>${renderBranch(id, 0)}` : '<p class="dim">no replies on these relays yet.</p>'}`;
   wireUp(root);
   document.title = `${nameOf(profiles, ev.pubkey)} on nostr — RadVladdy`;
@@ -303,7 +313,7 @@ async function viewAddr(root, ptr) {
     <p class="byline">
       <a href="${entityHref(npubEncode(ev.pubkey))}">${esc(nameOf(profiles, ev.pubkey))}</a>
       · ${fmtDate(published).slice(0, 10)} · long-form on nostr${zaps.sats ? zapBadge(zaps) : ''}
-      · <a href="nostr:${naddrEncode(ptr)}">open in client ↗</a>
+      · <a href="nostr:${naddrEncode(ptr)}">open in app ↗</a> · <a href="https://primal.net/a/${naddrEncode(ptr)}" rel="noopener">web ↗</a>
     </p>
     <div class="prose">${renderMarkdown(ev.content)}</div>
     <p class="sec-label">~/comments (${comments.length})</p>
@@ -357,14 +367,16 @@ export async function renderComments(root, pointer) {
   const list = root.querySelector('.nc-list');
   try {
     const ptr = decode(pointer.trim());
-    let filters, openLink, count = 0;
+    let filters, openLink, webLink, count = 0;
     if (ptr.type === 'naddr') {
       const coord = `${ptr.kind}:${ptr.pubkey}:${ptr.identifier}`;
       filters = [{ kinds: [1, 1111], '#a': [coord], limit: 200 }, { kinds: [9735], '#a': [coord], limit: 500 }];
       openLink = `nostr:${naddrEncode(ptr)}`;
+      webLink = `https://primal.net/a/${naddrEncode(ptr)}`;
     } else {
       filters = [{ kinds: [1], '#e': [ptr.id], limit: 200 }, { kinds: [9735], '#e': [ptr.id], limit: 500 }];
       openLink = `nostr:${noteEncode(ptr.id)}`;
+      webLink = `https://primal.net/e/${noteEncode(ptr.id)}`;
     }
     const related = await query(filters);
     const comments = related.filter((e) => e.kind !== 9735).sort((a, b) => a.created_at - b.created_at);
@@ -375,7 +387,8 @@ export async function renderComments(root, pointer) {
     root.querySelector('.nc-status').innerHTML =
       `${count ? `${count} comment${count > 1 ? 's' : ''}` : 'no comments yet'}` +
       (zaps.sats ? ` · <span class="nv-zap">⚡ ${fmtSats(zaps.sats)} sats</span>` : '') +
-      ` — <a href="${esc(openLink)}">reply in your client ↗</a>` +
+      ` — <a href="${esc(openLink)}">reply in your app ↗</a>` +
+      ` · <a href="${esc(webLink)}" rel="noopener">web ↗</a>` +
       ` · <a href="${entityHref(pointer.trim())}">view on /nostr</a>`;
     list.innerHTML = comments.map((c) => noteCard(c, profiles, new Map())).join('');
     wireUp(root);
