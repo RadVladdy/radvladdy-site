@@ -6,7 +6,7 @@
 import {
   RAD_PUBKEY, decode, npubEncode, noteEncode, naddrEncode,
   query, latestPer, tagValue, replyTarget, rootTarget,
-  zapTotals, fetchProfiles, fetchEventById, fetchAddr, verifyNip05,
+  zapTotals, fetchProfiles, fetchEventById, fetchAddr,
 } from '/js/nostr.js';
 
 const esc = (s) => String(s ?? '')
@@ -124,6 +124,11 @@ function avatarImg(profiles, pubkey, size) {
     : `<span class="nv-avatar nv-avatar-blank" style="width:${size}px;height:${size}px"></span>`;
 }
 
+// The little two-overlapping-boxes copy button.
+const copyBtn = (value) => `<button class="nv-cic" data-copy="${esc(value)}" title="copy" aria-label="copy">` +
+  '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3">' +
+  '<rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></button>';
+
 function zapBadge(z) {
   return z && z.sats > 0
     ? ` · <span class="nv-zap">⚡ ${fmtSats(z.sats)} sats${z.count > 1 ? ` <span class="dim">(${z.count})</span>` : ''}</span>`
@@ -172,33 +177,24 @@ async function viewProfile(root, pubkey) {
 
   const banner = profile.banner && isHttp(profile.banner)
     ? `<div class="nv-banner" data-banner="${esc(profile.banner)}"></div>` : '';
+  // No website badge: on your own profile it just points at the site
+  // you're standing on, and elsewhere it's clutter — the about text and
+  // nip05 already carry the domain.
   const nip05 = profile.nip05
-    ? `<span class="nv-nip05" data-nip05="${esc(profile.nip05)}"><span class="nv-tag">[NIP-05]</span> ${esc(profile.nip05)}</span>` : '';
-  const lud16 = profile.lud16 ? `<span class="nv-lud16"><span class="nv-bolt">⚡︎</span> ${esc(profile.lud16)}</span>` : '';
-  // The website badge is redundant when it just points back at the site
-  // you're already on.
-  let website = '';
-  if (profile.website && isHttp(profile.website)) {
-    try {
-      const host = new URL(profile.website).host.replace(/^www\./, '');
-      if (host !== location.host.replace(/^www\./, '')) {
-        website = `<a href="${esc(profile.website)}" rel="noopener nofollow">${esc(host)}</a>`;
-      }
-    } catch { /* unparseable url in kind-0 */ }
-  }
+    ? `<span class="nv-badge"><span class="nv-tag">[NIP-05]</span> ${esc(profile.nip05)}${copyBtn(profile.nip05)}</span>` : '';
+  const lud16 = profile.lud16
+    ? `<span class="nv-badge"><span class="nv-bolt">⚡︎</span> ${esc(profile.lud16)}${copyBtn(profile.lud16)}</span>` : '';
 
   root.innerHTML = `
     ${banner}
     <div class="nv-profile">
       ${avatarImg(profiles, pubkey, 84)}
-      <div class="nv-id">
-        <div class="nv-name">${esc(profile.display_name || profile.name || shortBech(npub))}</div>
-        <div class="nv-badges">${[nip05, lud16, website].filter(Boolean).join(' · ')}</div>
-        <div class="nv-npub"><code>${npub}</code> <button class="nv-copy" data-copy="${npub}">copy</button>
-          <a class="nv-open" href="nostr:${npub}">open in app ↗</a>
-          <a class="nv-open" href="https://primal.net/p/${npub}" rel="noopener">web ↗</a></div>
-      </div>
+      <div class="nv-name">${esc(profile.display_name || profile.name || shortBech(npub))}</div>
     </div>
+    ${nip05 || lud16 ? `<div class="nv-idrow">${nip05}${lud16}</div>` : ''}
+    <div class="nv-npub"><code>${npub}</code> <button class="nv-copy" data-copy="${npub}">copy</button>
+      <a class="nv-open" href="nostr:${npub}">app ↗</a>
+      <a class="nv-open" href="https://primal.net/p/${npub}" rel="noopener">web ↗</a></div>
     ${profile.about ? `<div class="nv-about">${renderContent(profile.about)}</div>` : ''}
     ${articles.length ? `<p class="sec-label">~/long-form</p><div class="nv-articles">${articles.map((a) => {
       const naddr = naddrEncode({ identifier: tagValue(a, 'd') || '', pubkey: a.pubkey, kind: 30023 });
@@ -211,14 +207,7 @@ async function viewProfile(root, pubkey) {
 
   wireUp(root);
 
-  // Hydrate after first paint: zap badges and a real nip05 check.
-  if (profile.nip05) {
-    verifyNip05(profile.nip05, pubkey).then((ok) => {
-      const el = root.querySelector('.nv-nip05');
-      if (el && ok) el.classList.add('ok');
-      if (el && ok === false) el.classList.add('bad');
-    });
-  }
+  // Hydrate zap badges after first paint.
   if (notes.length) {
     const receipts = await query([{ kinds: [9735], '#e': notes.map((n) => n.id), limit: 500 }]);
     const zaps = groupZaps(receipts);
@@ -324,12 +313,32 @@ async function viewAddr(root, ptr) {
 
 // ---- wiring ----
 
+// Clipboard API with the old textarea trick as fallback (the API is
+// permission-gated in some embedded browsers).
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  }
+}
+
 function wireUp(root) {
-  root.querySelectorAll('.nv-copy').forEach((btn) => {
+  root.querySelectorAll('.nv-copy, .nv-cic').forEach((btn) => {
     btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
-        btn.textContent = 'copied ✓';
-        setTimeout(() => { btn.textContent = 'copy'; }, 1600);
+      copyText(btn.dataset.copy).then((ok) => {
+        if (!ok) return;
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓';
+        setTimeout(() => { btn.innerHTML = orig; }, 1400);
       });
     });
   });
