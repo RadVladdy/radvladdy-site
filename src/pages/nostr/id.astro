@@ -1,0 +1,23 @@
+---
+// The shell behind every /nostr/<bech32> URL. The worker rewrites those
+// paths to this page (see src/worker.js); the client script reads the
+// identifier back out of location.pathname and renders the entity.
+// Dev fallback (no worker in `astro dev`): /nostr/id/?id=<bech32>.
+import Site from '../../layouts/Site.astro';
+---
+<Site
+  title="nostr — RadVladdy"
+  description="Live nostr viewer — profiles, notes, threads, and long-form, straight from the relays."
+>
+  <link rel="stylesheet" href="/css/nostr.css" />
+  <p class="sec-label">~/nostr</p>
+  <div id="nostr-root">
+    <p class="nv-status dim">connecting to relays…</p>
+  </div>
+  <p class="nv-foot dim">
+    fetched live from <span class="cy">nos.lol · damus · primal</span> — no middleman, no stale cache.
+  </p>
+  <script type="module" is:inline>
+    import('/js/nostr-view.js').then((m) => m.initEntity(document.getElementById('nostr-root')));
+  </script>
+</Site>

@@ -53,6 +53,40 @@ candidate.
 - The canonical person-string is **`rad@`** (it's Rad Vladdy), locked
   2026-06-10. `_@` also maps for the bare-domain NIP-05 badge.
 
+## The /nostr viewer (njump replacement)
+
+Self-hosted, client-side, zero dependencies: `public/js/nostr.js` (bech32/
+NIP-19 codec + relay pool + query helpers) and `public/js/nostr-view.js`
+(rendering + views), styled by `public/css/nostr.css`. `/nostr` is the
+profile home; `/nostr/<npub|nprofile|note|nevent|naddr>` renders any entity —
+the worker rewrites those paths to the `/nostr/id` shell (no asset matches
+them). Dev fallback without the worker: `/nostr/id/?id=<bech32>`. Relays:
+nos.lol / damus / primal. Display-only — no client-side signature
+verification (v2 = worker-side SSR). Never link njump.me from this site.
+
+**Essay comments ride the same machinery:** `src/data/nostr-posts.js` maps
+essay slug → nostr pointer (naddr/nevent) once an essay is cross-posted as
+NIP-23; an entry lights up `~/comments` on that essay's page. The map lives
+outside the essay files because stamped posts are immutable (below) — never
+add nostr pointers to post frontmatter after publication.
+
+## OG cards
+
+Per-post 1200x630 dark cards in `public/og/`, generated LOCALLY by
+`npm run og` (`scripts/og-cards.mjs`, needs macOS Menlo — never runs in CI)
+and committed. Regenerate when a post's title/subtitle changes or a new post
+ships. Non-post pages fall back to `images/skyline.jpg` via the layout's
+`ogImage` default.
+
+## Stamped posts are immutable
+
+Every file in `src/content/writing/` is OpenTimestamps-stamped; the exact
+stamped source + its `.ots` proof are served from `public/proofs/`. **Editing
+a published post breaks its proof.** Material edits require: edit → re-stamp
+→ replace both files in `public/proofs/` → disclose the revision in the post.
+Typo-level edits: same mechanics, lighter disclosure. Periodically run
+`ots upgrade` on the proofs once anchored and re-commit.
+
 ## Verify before push
 
 `npm run build`, check `dist/`, leak-scan, then push (= live deploy).

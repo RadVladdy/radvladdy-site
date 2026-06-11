@@ -2,8 +2,13 @@
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
-const { title, description = 'RadVladdy — writing, projects, and signal from the Bitcoin frontier.' } = Astro.props;
+const {
+  title,
+  description = 'RadVladdy — writing, projects, and signal from the Bitcoin frontier.',
+  ogImage = 'https://radvladdy.com/images/skyline.jpg',
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -17,8 +22,8 @@ const { title, description = 'RadVladdy — writing, projects, and signal from t
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
-    <meta property="og:image" content="https://radvladdy.com/images/avatar.jpg" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="lightning" content="rad@radvladdy.com" />
     <link rel="alternate" type="application/rss+xml" title="RadVladdy" href="/rss.xml" />
   </head>
@@ -30,6 +35,7 @@ const { title, description = 'RadVladdy — writing, projects, and signal from t
         <a href="/writing">/writing</a>
         <a href="/library">/library</a>
         <a href="/archive">/archive</a>
+        <a href="/nostr">/nostr</a>
       </nav>
     </header>
     <main>

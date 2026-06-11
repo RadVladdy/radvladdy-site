@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
 const latest = (await getCollection('writing'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -53,7 +52,7 @@ const latest = (await getCollection('writing'))
           <div class="ctas">
             <a class="btn btn-solid" href="/writing">read the writing →</a>
             <a class="btn" href="https://bitcoineconomy.ai">bitcoineconomy.ai</a>
-            <a class="btn" href={`https://njump.me/${npub}`}>nostr</a>
+            <a class="btn" href="/nostr">nostr</a>
           </div>
         </div>
         <div class="hero-avatar">
@@ -124,7 +123,7 @@ const latest = (await getCollection('writing'))
       <section id="connect">
         <p class="sec-label">~/connect</p>
         <ul class="links">
-          <li><a href={`https://njump.me/${npub}`}>nostr <span class="dim">— where I actually live</span></a></li>
+          <li><a href="/nostr">nostr <span class="dim">— where I actually live</span></a></li>
           <li><a href="https://stacker.news/RadVladdy21">stacker news <span class="dim">— @RadVladdy21</span></a></li>
           <li><a href="https://x.com/radvladdy">x <span class="dim">— @radvladdy</span></a></li>
         </ul>

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Site from '../../layouts/Site.astro';
+import nostrPosts from '../../data/nostr-posts.js';
 
 export async function getStaticPaths() {
   const posts = await getCollection('writing');
@@ -12,8 +13,13 @@ const date = post.data.date.toISOString().slice(0, 10);
 const block = post.data.block;
 const proof = `/proofs/${post.id}.md.ots`;
 const source = `/proofs/${post.id}.md`;
+const nostrPointer = nostrPosts[post.id];
 ---
-<Site title={`${post.data.title} — RadVladdy`} description={post.data.subtitle ?? post.data.title}>
+<Site
+  title={`${post.data.title} — RadVladdy`}
+  description={post.data.subtitle ?? post.data.title}
+  ogImage={`https://radvladdy.com/og/${post.id}.png`}
+>
   <h1>{post.data.title}</h1>
   {post.data.subtitle && <p class="post-subtitle">{post.data.subtitle}</p>}
   <p class="byline">
@@ -27,4 +33,16 @@ const source = `/proofs/${post.id}.md`;
     ⚡ <b>Zap this post:</b> <code>rad@radvladdy.com</code> — sats land whether my phone is on or not.
     Disagreements also accepted at that address.
   </div>
+  {nostrPointer && (
+    <section class="nostr-comments" data-pointer={nostrPointer}>
+      <link rel="stylesheet" href="/css/nostr.css" />
+      <p class="sec-label">~/comments — via nostr</p>
+      <p class="nc-status dim">connecting to relays…</p>
+      <div class="nc-list"></div>
+      <script type="module" is:inline>
+        const el = document.querySelector('.nostr-comments');
+        import('/js/nostr-view.js').then((m) => m.renderComments(el, el.dataset.pointer));
+      </script>
+    </section>
+  )}
 </Site>

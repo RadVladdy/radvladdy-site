@@ -51,6 +51,12 @@ export default {
         );
       }
     }
+    // /nostr/<bech32 entity> — clean njump-style URLs for the nostr viewer.
+    // No asset matches these paths, so the worker serves the /nostr/id shell;
+    // the client script reads the identifier back out of location.pathname.
+    if (/^\/nostr\/(npub|nprofile|note|nevent|naddr)1[02-9ac-hj-np-z]+\/?$/.test(url.pathname)) {
+      return env.ASSETS.fetch(new URL('/nostr/id/', url));
+    }
     return env.ASSETS.fetch(request);
   },
 };

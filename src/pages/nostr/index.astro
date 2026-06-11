@@ -1,0 +1,20 @@
+---
+import Site from '../../layouts/Site.astro';
+---
+<Site
+  title="nostr — RadVladdy"
+  description="RadVladdy on nostr — profile, notes, and long-form, fetched live from the relays. No middleman."
+>
+  <link rel="stylesheet" href="/css/nostr.css" />
+  <p class="sec-label">~/nostr</p>
+  <div id="nostr-root">
+    <p class="nv-status dim">connecting to relays…</p>
+  </div>
+  <p class="nv-foot dim">
+    fetched live from <span class="cy">nos.lol · damus · primal</span> — no middleman, no stale cache.
+    paste any id at <code>/nostr/&lt;npub·note·nevent·naddr&gt;</code>.
+  </p>
+  <script type="module" is:inline>
+    import('/js/nostr-view.js').then((m) => m.initHome(document.getElementById('nostr-root')));
+  </script>
+</Site>
