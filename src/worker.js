@@ -56,7 +56,8 @@ export default {
     if (url.pathname === '/api/nodes') {
       try {
         const res = await fetch('https://bitnodes.io/api/v1/snapshots/latest/', {
-          headers: { accept: 'application/json' },
+          // bitnodes sits behind bot protection that rejects UA-less fetches
+          headers: { accept: 'application/json', 'user-agent': 'radvladdy-dash/1.0 (https://radvladdy.com)' },
           cf: { cacheTtl: 600, cacheEverything: true },
         });
         const { total_nodes } = await res.json();
