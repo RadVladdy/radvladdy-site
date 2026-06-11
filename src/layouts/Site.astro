@@ -36,6 +36,8 @@ const {
         <a href="/library">/library</a>
         <a href="/archive">/archive</a>
         <a href="/nostr">/nostr</a>
+        <a href="/dash">/dash</a>
+        <a href="/connect">/connect</a>
       </nav>
     </header>
     <main>
@@ -79,7 +81,7 @@ const {
       .prompt { font-size: 14px; color: var(--text); text-decoration: none; }
       .cursor { animation: blink 1.2s steps(1) infinite; }
       @keyframes blink { 50% { opacity: 0; } }
-      nav { display: flex; gap: 18px; }
+      nav { display: flex; gap: 16px; flex-wrap: wrap; }
       nav a { color: var(--dim); text-decoration: none; font-size: 13px; }
       nav a:hover { color: var(--cyan); }
       main { max-width: 720px; margin: 0 auto; padding: 18px 20px 0; }

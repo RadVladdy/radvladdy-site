@@ -124,10 +124,11 @@ function avatarImg(profiles, pubkey, size) {
     : `<span class="nv-avatar nv-avatar-blank" style="width:${size}px;height:${size}px"></span>`;
 }
 
-// The little two-overlapping-boxes copy button.
-const copyBtn = (value) => `<button class="nv-cic" data-copy="${esc(value)}" title="copy" aria-label="copy">` +
+// The little two-overlapping-boxes copy glyph. Decorative — the whole
+// element carrying data-copy is the click target.
+const COPY_ICON = '<span class="nv-ci">' +
   '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3">' +
-  '<rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></button>';
+  '<rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></span>';
 
 function zapBadge(z) {
   return z && z.sats > 0
@@ -181,9 +182,9 @@ async function viewProfile(root, pubkey) {
   // you're standing on, and elsewhere it's clutter — the about text and
   // nip05 already carry the domain.
   const nip05 = profile.nip05
-    ? `<span class="nv-badge"><span class="nv-tag">[NIP-05]</span> ${esc(profile.nip05)}${copyBtn(profile.nip05)}</span>` : '';
+    ? `<button class="nv-badge" data-copy="${esc(profile.nip05)}" title="copy"><span class="nv-tag">[NIP-05]</span> ${esc(profile.nip05)}${COPY_ICON}</button>` : '';
   const lud16 = profile.lud16
-    ? `<span class="nv-badge"><span class="nv-bolt">⚡︎</span> ${esc(profile.lud16)}${copyBtn(profile.lud16)}</span>` : '';
+    ? `<button class="nv-badge" data-copy="${esc(profile.lud16)}" title="copy"><span class="nv-bolt">⚡︎</span> ${esc(profile.lud16)}${COPY_ICON}</button>` : '';
 
   root.innerHTML = `
     ${banner}
@@ -192,7 +193,7 @@ async function viewProfile(root, pubkey) {
       <div class="nv-name">${esc(profile.display_name || profile.name || shortBech(npub))}</div>
     </div>
     ${nip05 || lud16 ? `<div class="nv-idrow">${nip05}${lud16}</div>` : ''}
-    <div class="nv-npub"><code>${npub}</code> <button class="nv-copy" data-copy="${npub}">copy</button>
+    <div class="nv-npub"><button class="nv-npub-btn" data-copy="${npub}" title="copy"><code>${npub}</code>${COPY_ICON}</button>
       <a class="nv-open" href="nostr:${npub}">app ↗</a>
       <a class="nv-open" href="https://primal.net/p/${npub}" rel="noopener">web ↗</a></div>
     ${profile.about ? `<div class="nv-about">${renderContent(profile.about)}</div>` : ''}
@@ -332,13 +333,14 @@ async function copyText(text) {
 }
 
 function wireUp(root) {
-  root.querySelectorAll('.nv-copy, .nv-cic').forEach((btn) => {
+  root.querySelectorAll('[data-copy]').forEach((btn) => {
     btn.addEventListener('click', () => {
       copyText(btn.dataset.copy).then((ok) => {
         if (!ok) return;
-        const orig = btn.innerHTML;
-        btn.innerHTML = '✓';
-        setTimeout(() => { btn.innerHTML = orig; }, 1400);
+        const ic = btn.querySelector('.nv-ci') || btn;
+        const orig = ic.innerHTML;
+        ic.innerHTML = '✓';
+        setTimeout(() => { ic.innerHTML = orig; }, 1400);
       });
     });
   });

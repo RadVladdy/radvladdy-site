@@ -75,13 +75,14 @@ const latest = (await getCollection('writing'))
       </svg>
     </div>
 
-    <div class="ticker">
+    <a class="ticker" href="/dash">
       <span>block <b id="t-block">—</b></span>
       <span>price <b id="t-price">—</b></span>
       <span>fees <b id="t-fees">—</b></span>
       <span>moscow time <b id="t-mosc">—</b></span>
       <span>halving <b id="t-halv">—</b></span>
-    </div>
+      <span class="t-more">» /dash</span>
+    </a>
 
     <main>
       <section id="projects">
@@ -286,9 +287,11 @@ const latest = (await getCollection('writing'))
         display: flex; flex-wrap: wrap; gap: 4px 22px;
         padding: 10px 20px; justify-content: center;
         background: #06090d; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-        font-size: 13px; color: var(--dim);
+        font-size: 13px; color: var(--dim); text-decoration: none;
       }
       .ticker b { color: var(--green); font-weight: 500; }
+      .t-more { color: var(--cyan); }
+      .ticker:hover .t-more { color: #4be0f7; }
       section { padding: 26px 0 6px; }
       .sec-label { color: var(--dim); font-size: 12px; letter-spacing: 1px; margin: 0 0 14px; }
       .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }

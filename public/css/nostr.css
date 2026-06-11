@@ -36,21 +36,23 @@
   display: flex; flex-wrap: wrap; gap: 4px 20px;
   color: var(--dim); font-size: 12.5px; margin: 0 0 6px;
 }
-.nv-badge { white-space: nowrap; }
+/* The whole badge (label + identifier + glyph) is one click-to-copy target. */
+.nv-badge {
+  font: inherit; color: var(--dim); background: none; border: none;
+  padding: 0; cursor: pointer; white-space: nowrap; text-align: left;
+}
+.nv-badge:hover { color: var(--text); }
 .nv-tag { color: var(--cyan); font-size: 11px; letter-spacing: 0.5px; }
 .nv-bolt { color: var(--orange); }
-.nv-cic {
-  font: inherit; color: var(--dim); background: none; border: none;
-  padding: 0 2px; margin-left: 5px; cursor: pointer; vertical-align: -1px;
-}
-.nv-cic:hover { color: var(--cyan); }
+.nv-ci { color: var(--cyan); margin-left: 6px; }
+.nv-ci svg { vertical-align: -1px; }
 .nv-npub { font-size: 11.5px; color: var(--dim); margin: 0 0 6px; overflow-wrap: anywhere; }
 .nv-npub code { background: var(--panel); padding: 1px 6px; border-radius: 4px; }
-.nv-copy {
-  font: inherit; font-size: 11px; color: var(--cyan); background: none;
-  border: 1px solid var(--line); border-radius: 4px; padding: 0 7px; cursor: pointer;
+.nv-npub-btn {
+  font: inherit; color: var(--dim); background: none; border: none;
+  padding: 0; cursor: pointer; text-align: left; overflow-wrap: anywhere;
 }
-.nv-copy:hover { border-color: var(--cyan); }
+.nv-npub-btn:hover code { color: var(--text); }
 .nv-open { color: var(--cyan); text-decoration: none; margin-left: 6px; white-space: nowrap; }
 .nv-about { color: var(--dim); font-size: 14px; margin: 0 0 8px; }
 .nv-about a { color: var(--cyan); }

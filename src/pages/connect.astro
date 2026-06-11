@@ -1,0 +1,65 @@
+---
+import Site from '../layouts/Site.astro';
+const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
+---
+<Site
+  title="connect — RadVladdy"
+  description="Where to find RadVladdy — nostr, stacker news, X, and the lightning address that always works."
+>
+  <link rel="stylesheet" href="/css/nostr.css" />
+  <p class="sec-label">~/connect</p>
+  <h1>Connect</h1>
+  <p class="intro">
+    Pseudonymous by design — but reachable. The canonical string for everything is
+    <code>rad@radvladdy.com</code>: the <a href="/verify">verifiable</a> nostr identity and the
+    lightning address, both. Click anything below to copy it.
+  </p>
+
+  <p class="sec-label">~/social</p>
+  <a class="list-item" href="/nostr"><span class="t">nostr</span><span class="d">where I actually live</span></a>
+  <a class="list-item" href="https://stacker.news/RadVladdy21"><span class="t">stacker news</span><span class="d">@RadVladdy21</span></a>
+  <a class="list-item" href="https://x.com/radvladdy"><span class="t">x</span><span class="d">@radvladdy</span></a>
+
+  <p class="sec-label" style="margin-top: 34px;">~/identity rails</p>
+  <div class="nv-idrow">
+    <button class="nv-badge" data-copy="rad@radvladdy.com" title="copy"><span class="nv-tag">[NIP-05]</span> rad@radvladdy.com<span class="nv-ci"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></span></button>
+    <button class="nv-badge" data-copy="rad@radvladdy.com" title="copy"><span class="nv-bolt">⚡︎</span> rad@radvladdy.com<span class="nv-ci"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></span></button>
+  </div>
+  <div class="nv-npub">
+    <button class="nv-npub-btn" data-copy={npub} title="copy"><code>{npub}</code><span class="nv-ci"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 2.8H3.3A1.3 1.3 0 0 0 2 4.1v6.2"/></svg></span></button>
+  </div>
+  <p class="intro">
+    Zaps, replies, and disagreements all land at the same address — sats reach me
+    whether my phone is on or not.
+  </p>
+
+  <script is:inline>
+    // Same click-to-copy behavior as the /nostr viewer, standalone.
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return ok;
+      }
+    }
+    document.querySelectorAll('[data-copy]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        copyText(btn.dataset.copy).then((ok) => {
+          if (!ok) return;
+          const ic = btn.querySelector('.nv-ci') || btn;
+          const orig = ic.innerHTML;
+          ic.innerHTML = '✓';
+          setTimeout(() => { ic.innerHTML = orig; }, 1400);
+        });
+      });
+    });
+  </script>
+</Site>

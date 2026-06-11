@@ -1,0 +1,178 @@
+---
+// The chain dashboard — the homepage ticker, grown up. Everything renders
+// client-side from mempool.space (the site's one sanctioned external call),
+// refreshed every 60s. Terminal-green for chain data, per the design tokens.
+import Site from '../layouts/Site.astro';
+---
+<Site
+  title="dash — RadVladdy"
+  description="Live Bitcoin chain dashboard — blocks, fees, mempool, difficulty, hashrate, lightning. Straight from mempool.space, no middleman."
+>
+  <p class="sec-label">~/dash</p>
+  <h1>Chain dashboard</h1>
+  <p class="intro">
+    Live from <a href="https://mempool.space">mempool.space</a>, client-side, refreshed every 60s.
+    <span id="d-upd" class="dim"></span>
+  </p>
+
+  <div class="dash-grid">
+    <div class="d-card">
+      <span class="d-label">block height</span>
+      <b id="d-height" class="d-big">—</b>
+      <span class="d-sub">tip seen <b id="d-tip-age">—</b> ago</span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">price</span>
+      <b id="d-price" class="d-big">—</b>
+      <span class="d-sub">moscow time <b id="d-mosc">—</b> sat/$</span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">halving</span>
+      <b id="d-halv" class="d-big">—</b>
+      <span class="d-sub" id="d-halv-eta">—</span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">fees · sat/vB</span>
+      <span class="d-fees">
+        <span>fast <b id="d-f1">—</b></span>
+        <span>30m <b id="d-f2">—</b></span>
+        <span>1h <b id="d-f3">—</b></span>
+        <span>eco <b id="d-f4">—</b></span>
+      </span>
+      <span class="d-sub">mempool <b id="d-mem-n">—</b> txs · <b id="d-mem-v">—</b> vMB</span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">difficulty adjustment</span>
+      <b id="d-diff" class="d-big">—</b>
+      <span class="d-sub" id="d-diff-eta">—</span>
+      <span class="d-bar"><span id="d-diff-bar"></span></span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">hashrate</span>
+      <b id="d-hash" class="d-big">—</b>
+      <span class="d-sub">difficulty <b id="d-difft">—</b></span>
+    </div>
+    <div class="d-card">
+      <span class="d-label">lightning network</span>
+      <b id="d-ln-cap" class="d-big">—</b>
+      <span class="d-sub"><b id="d-ln-nodes">—</b> nodes · <b id="d-ln-chans">—</b> channels</span>
+    </div>
+  </div>
+
+  <p class="sec-label" style="margin-top: 34px;">~/blocks — latest</p>
+  <table class="d-blocks">
+    <thead>
+      <tr><th>height</th><th>age</th><th>txs</th><th>size</th><th>med fee</th><th class="d-pool">pool</th></tr>
+    </thead>
+    <tbody id="d-blocks"><tr><td colspan="6" class="dim">fetching…</td></tr></tbody>
+  </table>
+
+  <script is:inline>
+    (() => {
+      const API = 'https://mempool.space/api';
+      const $ = (id) => document.getElementById(id);
+      const fmt = (n) => Math.round(n).toLocaleString('en-US');
+      const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => '&#' + c.charCodeAt(0) + ';');
+      const ago = (ts) => {
+        const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
+        return m < 60 ? m + 'm' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm';
+      };
+      const jget = (p) => fetch(API + p).then((r) => { if (!r.ok) throw 0; return r.json(); });
+      const tget = (p) => fetch(API + p).then((r) => { if (!r.ok) throw 0; return r.text(); });
+
+      async function refresh() {
+        const [h, prices, fees, mem, diff, mining, ln, blocks] = (await Promise.allSettled([
+          tget('/blocks/tip/height'),
+          jget('/v1/prices'),
+          jget('/v1/fees/recommended'),
+          jget('/mempool'),
+          jget('/v1/difficulty-adjustment'),
+          jget('/v1/mining/hashrate/3d'),
+          jget('/v1/lightning/statistics/latest'),
+          jget('/v1/blocks'),
+        ])).map((r) => (r.status === 'fulfilled' ? r.value : null));
+
+        if (h) {
+          const height = parseInt(h, 10);
+          $('d-height').textContent = fmt(height);
+          const next = Math.ceil((height + 1) / 210000) * 210000;
+          const rem = next - height;
+          $('d-halv').textContent = '-' + fmt(rem) + ' blocks';
+          $('d-halv-eta').textContent = '~' + fmt((rem * 10) / 60 / 24) + ' days · ' +
+            new Date(Date.now() + rem * 600 * 1000).toISOString().slice(0, 10) +
+            ' · epoch ' + (Math.floor(height / 210000) + 1);
+        }
+        if (prices) {
+          $('d-price').textContent = '$' + fmt(prices.USD);
+          $('d-mosc').textContent = fmt(1e8 / prices.USD);
+        }
+        if (fees) {
+          $('d-f1').textContent = fees.fastestFee;
+          $('d-f2').textContent = fees.halfHourFee;
+          $('d-f3').textContent = fees.hourFee;
+          $('d-f4').textContent = fees.economyFee;
+        }
+        if (mem) {
+          $('d-mem-n').textContent = fmt(mem.count);
+          $('d-mem-v').textContent = (mem.vsize / 1e6).toFixed(1);
+        }
+        if (diff) {
+          const ch = diff.difficultyChange;
+          $('d-diff').textContent = (ch >= 0 ? '+' : '') + ch.toFixed(2) + '%';
+          $('d-diff-eta').textContent = 'retarget in ' + fmt(diff.remainingBlocks) + ' blocks · ' +
+            new Date(diff.estimatedRetargetDate).toISOString().slice(0, 10);
+          $('d-diff-bar').style.width = Math.min(100, diff.progressPercent).toFixed(1) + '%';
+        }
+        if (mining) {
+          $('d-hash').textContent = (mining.currentHashrate / 1e18).toFixed(0) + ' EH/s';
+          $('d-difft').textContent = (mining.currentDifficulty / 1e12).toFixed(1) + ' T';
+        }
+        if (ln && ln.latest) {
+          $('d-ln-cap').textContent = fmt(ln.latest.total_capacity / 1e8) + ' BTC';
+          $('d-ln-nodes').textContent = fmt(ln.latest.node_count);
+          $('d-ln-chans').textContent = fmt(ln.latest.channel_count);
+        }
+        if (blocks) {
+          $('d-tip-age').textContent = ago(blocks[0].timestamp);
+          $('d-blocks').innerHTML = blocks.slice(0, 8).map((b) => '<tr>' +
+            '<td>' + fmt(b.height) + '</td>' +
+            '<td>' + ago(b.timestamp) + '</td>' +
+            '<td>' + fmt(b.tx_count) + '</td>' +
+            '<td>' + (b.size / 1e6).toFixed(1) + ' MB</td>' +
+            '<td>~' + Math.round(b.extras?.medianFee ?? 0) + '</td>' +
+            '<td class="d-pool">' + esc(b.extras?.pool?.name || '') + '</td>' +
+          '</tr>').join('');
+        }
+        $('d-upd').textContent = '· updated ' + new Date().toTimeString().slice(0, 8);
+      }
+
+      refresh();
+      setInterval(refresh, 60000);
+    })();
+  </script>
+
+  <style is:global>
+    .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 12px; }
+    .d-card {
+      display: flex; flex-direction: column; gap: 5px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .d-label { color: var(--dim); font-size: 11px; letter-spacing: 1px; }
+    .d-big { color: var(--green); font-size: 22px; font-weight: 500; }
+    .d-sub { color: var(--dim); font-size: 12px; }
+    .d-sub b { color: var(--green); font-weight: 500; }
+    .d-fees { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--dim); padding: 3px 0; }
+    .d-fees b { color: var(--green); font-weight: 500; }
+    .d-bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+    .d-bar span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width 0.6s; }
+    .d-blocks { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .d-blocks th {
+      text-align: left; color: var(--dim); font-weight: 400; font-size: 11px;
+      letter-spacing: 1px; padding: 6px 8px 6px 2px; border-bottom: 1px solid var(--line);
+    }
+    .d-blocks td { padding: 8px 8px 8px 2px; border-bottom: 1px solid var(--line); color: var(--dim); }
+    .d-blocks td:first-child { color: var(--green); }
+    @media (max-width: 480px) { .d-pool { display: none; } }
+  </style>
+</Site>
