@@ -1,65 +1,48 @@
 ---
-// The chain dashboard — the homepage ticker, grown up. Everything renders
-// client-side from mempool.space (the site's one sanctioned external call),
-// refreshed every 60s. Terminal-green for chain data, per the design tokens.
+// The chain dashboard — Clark Moody school: tight section blocks, dense
+// label/value cells, bitcoin-orange values. Client-side data, refreshed
+// every 60s. Sources: mempool.space (primary) + blockchain.info charts
+// (chain size, transaction counts) + bitnodes (reachable nodes) — this
+// page is the one place the site calls beyond mempool.space.
 import Site from '../layouts/Site.astro';
+
+const sections = [
+  { name: 'markets', cells: [['price', 'price'], ['moscow time', 'mosc'], ['market cap', 'mcap']] },
+  { name: 'supply', cells: [['money supply', 'supply'], ['percent issued', 'issued'], ['issuance remaining', 'remain']] },
+  { name: 'blockchain', cells: [['block height', 'height'], ['chain size', 'csize'], ['reachable nodes', 'nodes']] },
+  { name: 'transactions', cells: [['total · all time', 'txtotal'], ['rate', 'txrate'], ['30 days', 'tx30']] },
+  { name: 'mempool', cells: [['transactions', 'memn'], ['since last block', 'tip'], ['min fee', 'fmin'], ['fast', 'f1'], ['30 min', 'f2'], ['1 hour', 'f3'], ['economy', 'f4']] },
+  { name: 'mining', cells: [['difficulty', 'diff'], ['diff epoch', 'depoch'], ['last change', 'dprev'], ['est change', 'dnext'], ['blocks to retarget', 'dblocks'], ['retarget date', 'ddate'], ['block time', 'btime']] },
+  { name: 'chain security', cells: [['hashrate', 'hash'], ['hashrate · 90d avg', 'hash90'], ['annual mining revenue', 'rev']] },
+  { name: 'mining econ', cells: [['block subsidy', 'sub'], ['subsidy value', 'subv'], ['avg fees / block', 'afees'], ['fees vs subsidy', 'fpct']] },
+  { name: 'halving', cells: [['halving epoch', 'hepoch'], ['blocks to halving', 'hblocks'], ['est date', 'hdate']] },
+  { name: 'lightning', cells: [['capacity', 'lncap'], ['capacity value', 'lnval'], ['nodes', 'lnnodes'], ['channels', 'lnchans']] },
+];
 ---
 <Site
   title="dash — RadVladdy"
-  description="Live Bitcoin chain dashboard — blocks, fees, mempool, difficulty, hashrate, lightning. Straight from mempool.space, no middleman."
+  description="Dense live Bitcoin chain dashboard — markets, supply, mining, mempool, lightning. Old school, no middleman."
 >
   <p class="sec-label">~/dash</p>
   <h1>Chain dashboard</h1>
   <p class="intro">
-    Live from <a href="https://mempool.space">mempool.space</a>, client-side, refreshed every 60s.
+    Live, client-side, refreshed every 60s — <a href="https://mempool.space">mempool.space</a>
+    + <a href="https://www.blockchain.com/charts">blockchain.info</a> + <a href="https://bitnodes.io">bitnodes</a>.
     <span id="d-upd" class="dim"></span>
   </p>
 
-  <div class="dash-grid">
-    <div class="d-card">
-      <span class="d-label">block height</span>
-      <b id="d-height" class="d-big">—</b>
-      <span class="d-sub">tip seen <b id="d-tip-age">—</b> ago</span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">price</span>
-      <b id="d-price" class="d-big">—</b>
-      <span class="d-sub">moscow time <b id="d-mosc">—</b> sat/$</span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">halving</span>
-      <b id="d-halv" class="d-big">—</b>
-      <span class="d-sub" id="d-halv-eta">—</span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">fees · sat/vB</span>
-      <span class="d-fees">
-        <span>fast <b id="d-f1">—</b></span>
-        <span>30m <b id="d-f2">—</b></span>
-        <span>1h <b id="d-f3">—</b></span>
-        <span>eco <b id="d-f4">—</b></span>
-      </span>
-      <span class="d-sub">mempool <b id="d-mem-n">—</b> txs · <b id="d-mem-v">—</b> vMB</span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">difficulty adjustment</span>
-      <b id="d-diff" class="d-big">—</b>
-      <span class="d-sub" id="d-diff-eta">—</span>
-      <span class="d-bar"><span id="d-diff-bar"></span></span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">hashrate</span>
-      <b id="d-hash" class="d-big">—</b>
-      <span class="d-sub">difficulty <b id="d-difft">—</b></span>
-    </div>
-    <div class="d-card">
-      <span class="d-label">lightning network</span>
-      <b id="d-ln-cap" class="d-big">—</b>
-      <span class="d-sub"><b id="d-ln-nodes">—</b> nodes · <b id="d-ln-chans">—</b> channels</span>
-    </div>
-  </div>
+  {sections.map((s) => (
+    <section class="d-sec">
+      <p class="sec-label">~/{s.name}</p>
+      <div class="d-grid">
+        {s.cells.map(([label, id]) => (
+          <div class="d-cell"><span class="d-l">{label}</span><b class="d-v" id={'d-' + id}>—</b></div>
+        ))}
+      </div>
+    </section>
+  ))}
 
-  <p class="sec-label" style="margin-top: 34px;">~/blocks — latest</p>
+  <p class="sec-label">~/blocks — latest</p>
   <table class="d-blocks">
     <thead>
       <tr><th>height</th><th>age</th><th>txs</th><th>size</th><th>med fee</th><th class="d-pool">pool</th></tr>
@@ -69,71 +52,117 @@ import Site from '../layouts/Site.astro';
 
   <script is:inline>
     (() => {
-      const API = 'https://mempool.space/api';
+      const M = 'https://mempool.space/api';
       const $ = (id) => document.getElementById(id);
+      const set = (id, v) => { if (v != null) $('d-' + id).textContent = v; };
       const fmt = (n) => Math.round(n).toLocaleString('en-US');
       const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => '&#' + c.charCodeAt(0) + ';');
+      const day = (ms) => new Date(ms).toISOString().slice(0, 10);
       const ago = (ts) => {
         const m = Math.max(0, Math.round((Date.now() / 1000 - ts) / 60));
         return m < 60 ? m + 'm' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm';
       };
-      const jget = (p) => fetch(API + p).then((r) => { if (!r.ok) throw 0; return r.json(); });
-      const tget = (p) => fetch(API + p).then((r) => { if (!r.ok) throw 0; return r.text(); });
+      const jget = (u) => fetch(u).then((r) => { if (!r.ok) throw 0; return r.json(); });
+      const tget = (u) => fetch(u).then((r) => { if (!r.ok) throw 0; return r.text(); });
+
+      // Theoretical supply from subsidy schedule — what the protocol has
+      // issued by this height (Clark Moody style; ignores unclaimed rewards).
+      const supplyAt = (h) => {
+        let s = 0, sub = 50;
+        for (let done = 0; done < h; sub /= 2) {
+          const n = Math.min(210000, h - done);
+          s += n * sub;
+          done += n;
+        }
+        return s;
+      };
 
       async function refresh() {
-        const [h, prices, fees, mem, diff, mining, ln, blocks] = (await Promise.allSettled([
-          tget('/blocks/tip/height'),
-          jget('/v1/prices'),
-          jget('/v1/fees/recommended'),
-          jget('/mempool'),
-          jget('/v1/difficulty-adjustment'),
-          jget('/v1/mining/hashrate/3d'),
-          jget('/v1/lightning/statistics/latest'),
-          jget('/v1/blocks'),
-        ])).map((r) => (r.status === 'fulfilled' ? r.value : null));
+        const [hRaw, prices, fees, mem, diff, mining, ln, blocks, csize, txTotal, tx30, nodes] =
+          (await Promise.allSettled([
+            tget(M + '/blocks/tip/height'),
+            jget(M + '/v1/prices'),
+            jget(M + '/v1/fees/recommended'),
+            jget(M + '/mempool'),
+            jget(M + '/v1/difficulty-adjustment'),
+            jget(M + '/v1/mining/hashrate/3m'),
+            jget(M + '/v1/lightning/statistics/latest'),
+            jget(M + '/v1/blocks'),
+            jget('https://api.blockchain.info/charts/blocks-size?timespan=30days&cors=true'),
+            jget('https://api.blockchain.info/charts/n-transactions-total?timespan=30days&cors=true'),
+            jget('https://api.blockchain.info/charts/n-transactions?timespan=30days&cors=true'),
+            jget('/api/nodes'),
+          ])).map((r) => (r.status === 'fulfilled' ? r.value : null));
 
-        if (h) {
-          const height = parseInt(h, 10);
-          $('d-height').textContent = fmt(height);
-          const next = Math.ceil((height + 1) / 210000) * 210000;
-          const rem = next - height;
-          $('d-halv').textContent = '-' + fmt(rem) + ' blocks';
-          $('d-halv-eta').textContent = '~' + fmt((rem * 10) / 60 / 24) + ' days · ' +
-            new Date(Date.now() + rem * 600 * 1000).toISOString().slice(0, 10) +
-            ' · epoch ' + (Math.floor(height / 210000) + 1);
+        const usd = prices ? prices.USD : null;
+        const height = hRaw ? parseInt(hRaw, 10) : null;
+
+        if (usd) {
+          set('price', '$' + fmt(usd));
+          set('mosc', fmt(1e8 / usd) + ' sat/$');
         }
-        if (prices) {
-          $('d-price').textContent = '$' + fmt(prices.USD);
-          $('d-mosc').textContent = fmt(1e8 / prices.USD);
+        if (height) {
+          const supply = supplyAt(height);
+          const epoch = Math.floor(height / 210000);
+          const subsidy = 50 / 2 ** epoch;
+          const next = (epoch + 1) * 210000;
+          set('height', fmt(height));
+          set('supply', fmt(supply) + ' BTC');
+          set('issued', ((supply / 21e6) * 100).toFixed(2) + '%');
+          set('remain', fmt(21e6 - supply) + ' BTC');
+          set('depoch', fmt(Math.floor(height / 2016) + 1));
+          set('sub', subsidy + ' BTC');
+          set('hepoch', String(epoch + 1));
+          set('hblocks', fmt(next - height));
+          set('hdate', '~' + day(Date.now() + (next - height) * 600 * 1000));
+          if (usd) {
+            set('mcap', '$' + (supply * usd / 1e12).toFixed(2) + ' T');
+            set('subv', '$' + fmt(subsidy * usd));
+          }
+          if (blocks) {
+            const feesBtc = blocks.reduce((a, b) => a + (b.extras?.totalFees ?? 0), 0) / blocks.length / 1e8;
+            set('afees', feesBtc.toFixed(3) + ' BTC');
+            set('fpct', ((feesBtc / subsidy) * 100).toFixed(1) + '%');
+            if (usd) set('rev', '$' + ((subsidy + feesBtc) * usd * 52560 / 1e9).toFixed(1) + ' B/yr');
+          }
         }
         if (fees) {
-          $('d-f1').textContent = fees.fastestFee;
-          $('d-f2').textContent = fees.halfHourFee;
-          $('d-f3').textContent = fees.hourFee;
-          $('d-f4').textContent = fees.economyFee;
+          set('fmin', fees.minimumFee + ' sat/vB');
+          set('f1', fees.fastestFee + ' sat/vB');
+          set('f2', fees.halfHourFee + ' sat/vB');
+          set('f3', fees.hourFee + ' sat/vB');
+          set('f4', fees.economyFee + ' sat/vB');
         }
-        if (mem) {
-          $('d-mem-n').textContent = fmt(mem.count);
-          $('d-mem-v').textContent = (mem.vsize / 1e6).toFixed(1);
-        }
+        if (mem) set('memn', fmt(mem.count));
         if (diff) {
-          const ch = diff.difficultyChange;
-          $('d-diff').textContent = (ch >= 0 ? '+' : '') + ch.toFixed(2) + '%';
-          $('d-diff-eta').textContent = 'retarget in ' + fmt(diff.remainingBlocks) + ' blocks · ' +
-            new Date(diff.estimatedRetargetDate).toISOString().slice(0, 10);
-          $('d-diff-bar').style.width = Math.min(100, diff.progressPercent).toFixed(1) + '%';
+          set('dprev', (diff.previousRetarget >= 0 ? '+' : '') + diff.previousRetarget.toFixed(2) + '%');
+          set('dnext', (diff.difficultyChange >= 0 ? '+' : '') + diff.difficultyChange.toFixed(2) + '%');
+          set('dblocks', fmt(diff.remainingBlocks));
+          set('ddate', day(diff.estimatedRetargetDate));
+          set('btime', Math.floor(diff.timeAvg / 60000) + 'm ' + Math.round((diff.timeAvg % 60000) / 1000) + 's');
         }
         if (mining) {
-          $('d-hash').textContent = (mining.currentHashrate / 1e18).toFixed(0) + ' EH/s';
-          $('d-difft').textContent = (mining.currentDifficulty / 1e12).toFixed(1) + ' T';
+          set('diff', (mining.currentDifficulty / 1e12).toFixed(1) + ' T');
+          set('hash', (mining.currentHashrate / 1e18).toFixed(0) + ' EH/s');
+          const hs = mining.hashrates || [];
+          if (hs.length) set('hash90', (hs.reduce((a, b) => a + b.avgHashrate, 0) / hs.length / 1e18).toFixed(0) + ' EH/s');
         }
         if (ln && ln.latest) {
-          $('d-ln-cap').textContent = fmt(ln.latest.total_capacity / 1e8) + ' BTC';
-          $('d-ln-nodes').textContent = fmt(ln.latest.node_count);
-          $('d-ln-chans').textContent = fmt(ln.latest.channel_count);
+          set('lncap', fmt(ln.latest.total_capacity / 1e8) + ' BTC');
+          if (usd) set('lnval', '$' + (ln.latest.total_capacity / 1e8 * usd / 1e9).toFixed(2) + ' B');
+          set('lnnodes', fmt(ln.latest.node_count));
+          set('lnchans', fmt(ln.latest.channel_count));
         }
+        if (csize && csize.values?.length) set('csize', fmt(csize.values.at(-1).y / 1000) + ' GB');
+        if (txTotal && txTotal.values?.length) set('txtotal', fmt(txTotal.values.at(-1).y));
+        if (tx30 && tx30.values?.length) {
+          const sum = tx30.values.reduce((a, v) => a + v.y, 0);
+          set('tx30', (sum / 1e6).toFixed(1) + ' M');
+          set('txrate', (tx30.values.at(-1).y / 86400).toFixed(1) + ' tx/s');
+        }
+        if (nodes && nodes.total_nodes) set('nodes', fmt(nodes.total_nodes));
         if (blocks) {
-          $('d-tip-age').textContent = ago(blocks[0].timestamp);
+          set('tip', ago(blocks[0].timestamp));
           $('d-blocks').innerHTML = blocks.slice(0, 8).map((b) => '<tr>' +
             '<td>' + fmt(b.height) + '</td>' +
             '<td>' + ago(b.timestamp) + '</td>' +
@@ -152,27 +181,27 @@ import Site from '../layouts/Site.astro';
   </script>
 
   <style is:global>
-    .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 12px; }
-    .d-card {
-      display: flex; flex-direction: column; gap: 5px;
-      background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
-      padding: 14px 16px;
+    .d-sec { margin: 0 0 4px; }
+    .d-sec .sec-label { margin: 18px 0 6px; }
+    .d-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      border-top: 1px solid var(--line); border-left: 1px solid var(--line);
     }
-    .d-label { color: var(--dim); font-size: 11px; letter-spacing: 1px; }
-    .d-big { color: var(--green); font-size: 22px; font-weight: 500; }
-    .d-sub { color: var(--dim); font-size: 12px; }
-    .d-sub b { color: var(--green); font-weight: 500; }
-    .d-fees { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--dim); padding: 3px 0; }
-    .d-fees b { color: var(--green); font-weight: 500; }
-    .d-bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 5px; }
-    .d-bar span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width 0.6s; }
+    .d-cell {
+      display: flex; flex-direction: column; gap: 1px;
+      padding: 7px 10px 8px;
+      border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .d-l { color: var(--dim); font-size: 10.5px; letter-spacing: 0.8px; }
+    .d-v { color: var(--orange); font-size: 15.5px; font-weight: 500; overflow-wrap: anywhere; }
     .d-blocks { width: 100%; border-collapse: collapse; font-size: 12.5px; }
     .d-blocks th {
       text-align: left; color: var(--dim); font-weight: 400; font-size: 11px;
       letter-spacing: 1px; padding: 6px 8px 6px 2px; border-bottom: 1px solid var(--line);
     }
     .d-blocks td { padding: 8px 8px 8px 2px; border-bottom: 1px solid var(--line); color: var(--dim); }
-    .d-blocks td:first-child { color: var(--green); }
+    .d-blocks td:first-child { color: var(--orange); }
     @media (max-width: 480px) { .d-pool { display: none; } }
   </style>
 </Site>

@@ -51,6 +51,23 @@ export default {
         );
       }
     }
+    // /api/nodes — reachable-node count for /dash. Bitnodes has no CORS,
+    // so the worker proxies it; the edge caches the answer for 10 minutes.
+    if (url.pathname === '/api/nodes') {
+      try {
+        const res = await fetch('https://bitnodes.io/api/v1/snapshots/latest/', {
+          headers: { accept: 'application/json' },
+          cf: { cacheTtl: 600, cacheEverything: true },
+        });
+        const { total_nodes } = await res.json();
+        return new Response(JSON.stringify({ total_nodes }), {
+          headers: { ...JSON_HEADERS, 'cache-control': 'public, max-age=600' },
+        });
+      } catch {
+        return new Response(JSON.stringify({ total_nodes: null }), { status: 502, headers: JSON_HEADERS });
+      }
+    }
+
     // /nostr/<bech32 entity> — clean njump-style URLs for the nostr viewer.
     // No asset matches these paths, so the worker serves the /nostr/id shell;
     // the client script reads the identifier back out of location.pathname.

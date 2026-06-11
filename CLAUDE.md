@@ -22,8 +22,8 @@ committed files. Leak-scan the diff before every commit.
 | `--text` | `#e6edf3` | primary text |
 | `--dim` | `#8b949e` | muted text |
 | `--cyan` | `#22d3ee` | signature accent (the avatar's eye) |
-| `--orange` | `#f7931a` | bitcoin-specific elements, sparingly |
-| `--green` | `#39d353` | terminal/chain data only (ticker, dashboard) |
+| `--orange` | `#f7931a` | bitcoin-specific elements + chain-data values (ticker, /dash) |
+| `--green` | `#39d353` | status accents only (live pills, archive badges) |
 
 All-mono typography (system mono stack — no webfonts, no third-party
 requests). Motifs: prompt-style header (`rad@radvladdy:~$`), blinking cursor,
