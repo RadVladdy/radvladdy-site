@@ -8,4 +8,5 @@
 // Add a line here on each drip day instead.
 export default {
   // 'your-zaps-are-probably-broken': 'naddr1…',
+  'i-rebuilt-my-web-presence-in-one-day': 'nevent1qqs2uzsjgwxkrn2s76f7utttkqkn59ce3fv9pfndxsr4df67042kjfcpr4mhxue69uhkummnw3ezucnfw33k76twv4ezuum0vd5kzmp0qgs8jvl2r27mx2gnnd8txu2hvjfzndqaptjytyrj8zc8jfsc9achjfqrqsqqqqqp2n4lxm',
 };
