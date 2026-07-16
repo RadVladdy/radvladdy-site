@@ -16,7 +16,10 @@
 // Swapping a name's backend is a one-line change here; the public address
 // never changes.
 const LNURLP_UPSTREAM = {
-  rad: 'https://zeuspay.com/.well-known/lnurlp/intelligentdragon65',
+  // Cut over to our own sovereign LNbits node 2026-07-16 (was ZeusPay/Cashu).
+  // Rollback = restore the ZeusPay line below.
+  // rad: 'https://zeuspay.com/.well-known/lnurlp/intelligentdragon65',
+  rad: 'https://ln.radvladdy.com/.well-known/lnurlp/rad',
 };
 
 const JSON_HEADERS = {
