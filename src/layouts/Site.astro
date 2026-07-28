@@ -17,7 +17,14 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- The avatar's glowing eye, cropped and darkened. Crawlers fetch
+         /favicon.ico by convention regardless of these tags, so a real one
+         lives there too. Sizes stop at 180 — the source is 512px and this is a
+         140px crop of it. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=3" />
+    <link rel="apple-touch-icon" href="/favicon-180.png?v=3" />
     <meta name="theme-color" content="#0b0f14" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
