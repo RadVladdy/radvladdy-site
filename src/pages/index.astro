@@ -21,6 +21,11 @@ const latest = (await getCollection('writing'))
     <meta property="og:image" content="https://radvladdy.com/images/avatar.jpg" />
     <meta name="twitter:card" content="summary" />
     <meta name="lightning" content="rad@radvladdy.com" />
+      <!-- Cloudflare Web Analytics - cookieless, no personal data.
+         Hard-wired because the zone's auto-install does not reach
+         Pages/Workers-served responses, so the beacon never landed. -->
+    <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "b12992e49de846e6b9a935c6f2295e0f"}'></script>
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
