@@ -42,6 +42,21 @@ H.264 via `avconvert --preset Preset960x540`). `images/skyline.jpg` (golden
 Bitcoin-moon panorama) is an unused-but-kept asset — og-banner / Phase B
 candidate.
 
+## Project marks (the `~/projects` cards)
+
+Each live card carries that site's own logo from `public/images/logo-*.png`,
+30px tall, left of the name; the status pill sits on its own right-aligned
+line above it (it cannot share the name's row — at 3-up card width the pill
+gets clipped). **Copy the artwork in; never hotlink another site's logo** —
+the no-third-party-requests rule applies to images too. Sibling repos are the
+source: `~/dev/{bitcoineconomy-ai,bitcoinkeys-guide,timechain-wiki-astro}`.
+Two caveats learned the hard way: a favicon is usually a *tile crop*, so it
+clips artwork that runs to the edge (timechain's sunburst) — prefer the
+transparent logo and size up; and a wide mark whose glyph fills less of its
+height needs a few px more than 30 to sit level with the others (`.logo.tall`
+34px, `.logo.rays` 40px). `logo-timechain.png` is a derived no-sunburst
+variant kept alongside the sunburst one for a one-line revert.
+
 ## Identity rails
 
 - NIP-05: `public/.well-known/nostr.json` — `_` and `rad` → the RadVladdy
