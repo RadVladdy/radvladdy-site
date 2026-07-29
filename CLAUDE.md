@@ -1,6 +1,7 @@
 # radvladdy.com — build & design conventions
 
-Astro static one-pager (Phase A), deployed to Cloudflare on push to `main`.
+Astro static one-pager (Phase A), deployed to Cloudflare. **Pushing to `main`
+does not deploy** — see "Deploying" below.
 This is the **person** site (RadVladdy) — cousin of bitcoineconomy.ai (the
 brand site), deliberately grittier and more personal.
 
@@ -54,8 +55,18 @@ Two caveats learned the hard way: a favicon is usually a *tile crop*, so it
 clips artwork that runs to the edge (timechain's sunburst) — prefer the
 transparent logo and size up; and a wide mark whose glyph fills less of its
 height needs a few px more than 30 to sit level with the others (`.logo.tall`
-34px, `.logo.rays` 40px). `logo-timechain.png` is a derived no-sunburst
-variant kept alongside the sunburst one for a one-line revert.
+34px, `.logo.rays` 40px).
+
+**timechain's mark — settled 2026-07-29.** The card runs the **no-sunburst**
+`logo-timechain.png` (`.logo.tall`, 46x34). The full sunburst variant
+(`logo-timechain-rays.png`, `.logo.rays`, 42x40) was tried at 40px and
+reverted: its rays are hairline and pale, so at card size they don't resolve
+into detail — they read as haze around the glyph, and the mark looks dimmer
+and busier than the flat, single-weight ₿ marks on the other two cards. The
+rays file is kept for a one-line revert; the swap is spelled out in a comment
+above the `<img>` in `src/pages/index.astro`. General lesson for this row:
+**a mark that carries fine linework loses to a bold one at 40px** — pick the
+simplified variant.
 
 ## Identity rails
 
@@ -90,7 +101,19 @@ add nostr pointers to post frontmatter after publication.
 Per-post 1200x630 dark cards in `public/og/`, generated LOCALLY by
 `npm run og` (`scripts/og-cards.mjs`, needs macOS Menlo — never runs in CI)
 and committed. Regenerate when a post's title/subtitle changes or a new post
-ships. Non-post pages fall back to `images/skyline.jpg` via the layout's
+ships.
+
+**Generate on a Mac or not at all.** `wrap()` sizes lines from a hardcoded
+Menlo advance width (`CHAR_W = 0.602`), so a substitute font keeps Menlo's
+line breaks while drawing different glyph widths — and the prompt's `▮`
+(U+25AE) plus the subtitle italic simply may not exist in the fallback. The
+Least-American card was generated with JetBrains Mono on the headless box and
+shipped a missing-glyph box where the cursor belongs, with the subtitle
+upright instead of italic.
+
+Subtitles are capped at **two lines** — a third lands at y=506 and collides
+with the byline at y=512 — so long ones step 27px → 25px → 23px to fit. Before
+that stepdown existed, a long subtitle was silently truncated mid-sentence. Non-post pages fall back to `images/skyline.jpg` via the layout's
 `ogImage` default.
 
 ## Stamped posts are immutable
@@ -102,6 +125,23 @@ a published post breaks its proof.** Material edits require: edit → re-stamp
 Typo-level edits: same mechanics, lighter disclosure. Periodically run
 `ots upgrade` on the proofs once anchored and re-commit.
 
+## Deploying
+
+**Workers Builds CI has never fired — nine pushes, nine no-ops.** Treat `git
+push` as source control only; it publishes nothing. The real deploy is:
+
+```
+source ~/.secrets/bea-cloudflare.env
+npm run build && npx wrangler deploy
+```
+
+**Then verify every new or changed asset over the wire.** `wrangler` has
+reported a clean success while silently skipping a brand-new file, so a green
+deploy log is not evidence. `curl -sI` each changed URL and compare the served
+`content-length` against the local byte size — matching sizes, not a 200, is
+what proves the upload landed.
+
 ## Verify before push
 
-`npm run build`, check `dist/`, leak-scan, then push (= live deploy).
+`npm run build`, check `dist/`, leak-scan, deploy (above), verify over the
+wire, then push.

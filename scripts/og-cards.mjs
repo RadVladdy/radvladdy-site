@@ -35,8 +35,13 @@ function card({ title, subtitle, date, block }) {
   const titleSize = title.length <= 38 ? 62 : title.length <= 70 ? 52 : 44;
   const titleLines = wrap(title, Math.floor((W - 2 * MARGIN) / (titleSize * CHAR_W))).slice(0, 3);
   const titleLH = Math.round(titleSize * 1.3);
-  const subSize = 27;
-  const subLines = subtitle ? wrap(subtitle, Math.floor((W - 2 * MARGIN) / (subSize * CHAR_W))).slice(0, 2) : [];
+  // Long subtitles step the font down, the same way long titles do above. Two
+  // lines is a hard cap — a third would land at y=506 and collide with the
+  // byline at y=512 — so without the stepdown the slice() silently drops the
+  // end of the sentence.
+  const subFit = (size) => wrap(subtitle, Math.floor((W - 2 * MARGIN) / (size * CHAR_W)));
+  const subSize = subtitle ? ([27, 25, 23].find((s) => subFit(s).length <= 2) ?? 23) : 27;
+  const subLines = subtitle ? subFit(subSize).slice(0, 2) : [];
 
   let y = 250;
   const titleText = titleLines.map((l) => `<text x="${MARGIN}" y="${(y += titleLH) - titleLH}" font-size="${titleSize}" font-weight="bold" fill="#e6edf3">${esc(l)}</text>`).join('');

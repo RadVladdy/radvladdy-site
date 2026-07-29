@@ -117,8 +117,11 @@ const latest = (await getCollection('writing'))
           <a class="card" href="https://timechain.wiki">
             <span class="status live">live</span>
             <span class="card-head">
-              <!-- To drop the sunburst: swap to logo-timechain.png, class "logo tall", 46x34. -->
-              <img class="logo rays" src="/images/logo-timechain-rays.png" alt="" width="42" height="40" decoding="async">
+              <!-- Sunburst variant tried 2026-07-28, reverted 2026-07-29: at 40px the
+                   rays are hairline and don't resolve — they read as haze next to the
+                   flat, single-weight marks on the other two cards. To put it back:
+                   swap to logo-timechain-rays.png, class "logo rays", 42x40. -->
+              <img class="logo tall" src="/images/logo-timechain.png" alt="" width="46" height="34" decoding="async">
               <span class="card-name">timechain.wiki</span>
             </span>
             <span class="card-desc">A reference wiki for Bitcoin — the concepts, history, and mechanics, from first principles.</span>
