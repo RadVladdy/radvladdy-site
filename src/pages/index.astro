@@ -117,7 +117,7 @@ const latest = (await getCollection('writing'))
           <a class="card" href="https://timechain.wiki">
             <span class="status live">live</span>
             <span class="card-head">
-              <img class="logo" src="/images/logo-timechain.png" alt="" width="30" height="30" decoding="async">
+              <img class="logo tall" src="/images/logo-timechain.png" alt="" width="46" height="34" decoding="async">
               <span class="card-name">timechain.wiki</span>
             </span>
             <span class="card-desc">A reference wiki for Bitcoin — the concepts, history, and mechanics, from first principles.</span>
@@ -338,7 +338,9 @@ const latest = (await getCollection('writing'))
       .card-name { color: var(--text); font-size: 15px; }
       /* card head: each project's own logo, its name, and the status pill right */
       .card-head { display: flex; align-items: center; gap: 10px; }
-      .logo { height: 30px; width: auto; max-width: 44px; flex: none; object-fit: contain; }
+      .logo { height: 30px; width: auto; max-width: 48px; flex: none; object-fit: contain; }
+      /* a wide mark whose glyph fills less of its height needs a touch more of it */
+      .logo.tall { height: 34px; }
       .logo.redacted { width: 30px; background: var(--line); border-radius: 5px; }
       .card-desc { color: var(--dim); font-size: 13px; line-height: 1.6; }
       .body-text { color: var(--dim); font-size: 14px; max-width: 60ch; margin: 0; }
