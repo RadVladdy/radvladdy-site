@@ -100,43 +100,32 @@ const latest = (await getCollection('writing'))
         <div class="cards">
           <a class="card" href="https://bitcoineconomy.ai">
             <span class="status live">live</span>
-            <span class="name-row">
-              <svg class="mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8 4.2v15.6"/>
-                <path d="M10.4 1.9v2.3M14.1 1.9v2.3M10.4 19.8v2.3M14.1 19.8v2.3"/>
-                <path d="M8 4.2h5.6a3.4 3.4 0 0 1 0 6.8H8"/>
-                <path d="M8 11h6.3a4.4 4.4 0 0 1 0 8.8H8"/>
-              </svg>
+            <span class="card-head">
+              <img class="logo" src="/images/logo-bitcoineconomy.png" alt="" width="31" height="30" decoding="async">
               <span class="card-name">bitcoineconomy.ai</span>
             </span>
             <span class="card-desc">The case for Bitcoin as the money of the AI economy — argued for humans, specified for machines.</span>
           </a>
           <a class="card" href="https://bitcoinkeys.guide">
             <span class="status live">live</span>
-            <span class="name-row">
-              <span class="mark keys" aria-hidden="true"></span>
+            <span class="card-head">
+              <img class="logo" src="/images/logo-bitcoinkeys.png" alt="" width="42" height="30" decoding="async">
               <span class="card-name">bitcoinkeys.guide</span>
             </span>
             <span class="card-desc">An independent, Bitcoin-only guide to holding your own keys — from your first hardware wallet to multisig. No affiliate links, nothing to sell you.</span>
           </a>
           <a class="card" href="https://timechain.wiki">
             <span class="status live">live</span>
-            <span class="name-row">
-              <svg class="mark" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M11.3 8.1C9 6.4 5.9 5.8 2.6 6.1a.7.7 0 0 0-.6.7v10.4c0 .4.3.7.7.7 3 0 5.9.5 8.6 2z"/>
-                <path d="M12.7 8.1C15 6.4 18.1 5.8 21.4 6.1a.7.7 0 0 1 .6.7v10.4c0 .4-.3.7-.7.7-3 0-5.9.5-8.6 2z"/>
-              </svg>
+            <span class="card-head">
+              <img class="logo" src="/images/logo-timechain.png" alt="" width="30" height="30" decoding="async">
               <span class="card-name">timechain.wiki</span>
             </span>
             <span class="card-desc">A reference wiki for Bitcoin — the concepts, history, and mechanics, from first principles.</span>
           </a>
           <div class="card">
             <span class="status enc">encrypted</span>
-            <span class="name-row">
-              <svg class="mark lock" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                <rect x="4" y="10.5" width="16" height="10" rx="2"/>
-                <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
-              </svg>
+            <span class="card-head">
+              <span class="logo redacted" aria-hidden="true"></span>
               <span class="card-name">▮▮▮▮▮▮▮▮</span>
             </span>
             <span class="card-desc">In stealth. Decrypts later.</span>
@@ -340,22 +329,17 @@ const latest = (await getCollection('writing'))
       }
       a.card:hover { border-color: var(--cyan); }
       .status {
-        align-self: flex-start; font-size: 11px; padding: 1px 8px;
+        align-self: flex-end; font-size: 11px; padding: 1px 8px;
         border-radius: 4px; border: 1px solid;
       }
       .status.live { color: var(--green); border-color: var(--green); }
       .status.building { color: var(--cyan); border-color: var(--cyan); }
       .status.enc { color: var(--orange); border-color: var(--orange); }
       .card-name { color: var(--text); font-size: 15px; }
-      /* project marks — one-colour silhouettes of each site's own logo */
-      .name-row { display: flex; align-items: center; gap: 9px; }
-      .mark { width: 20px; height: 20px; flex: none; color: var(--orange); }
-      .mark.lock { color: var(--dim); }
-      .mark.keys {
-        display: block; width: 25px; background-color: currentColor;
-        -webkit-mask: url(/images/mark-bitcoinkeys.png) no-repeat center / contain;
-        mask: url(/images/mark-bitcoinkeys.png) no-repeat center / contain;
-      }
+      /* card head: each project's own logo, its name, and the status pill right */
+      .card-head { display: flex; align-items: center; gap: 10px; }
+      .logo { height: 30px; width: auto; max-width: 44px; flex: none; object-fit: contain; }
+      .logo.redacted { width: 30px; background: var(--line); border-radius: 5px; }
       .card-desc { color: var(--dim); font-size: 13px; line-height: 1.6; }
       .body-text { color: var(--dim); font-size: 14px; max-width: 60ch; margin: 0; }
       .post-row {
