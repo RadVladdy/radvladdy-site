@@ -99,17 +99,32 @@ add nostr pointers to post frontmatter after publication.
 ## OG cards
 
 Per-post 1200x630 dark cards in `public/og/`, generated LOCALLY by
-`npm run og` (`scripts/og-cards.mjs`, needs macOS Menlo — never runs in CI)
-and committed. Regenerate when a post's title/subtitle changes or a new post
-ships.
+`npm run og` (`scripts/og-cards.mjs`, needs the real Menlo face — never runs
+in CI) and committed. Regenerate when a post's title/subtitle changes or a
+new post ships.
 
-**Generate on a Mac or not at all.** `wrap()` sizes lines from a hardcoded
-Menlo advance width (`CHAR_W = 0.602`), so a substitute font keeps Menlo's
-line breaks while drawing different glyph widths — and the prompt's `▮`
-(U+25AE) plus the subtitle italic simply may not exist in the fallback. The
-Least-American card was generated with JetBrains Mono on the headless box and
-shipped a missing-glyph box where the cursor belongs, with the subtitle
-upright instead of italic.
+**Runs on the box as of 2026-07-30.** It used to be Mac-only: the font path
+was hardcoded to `/System/Library/Fonts/Menlo.ttc`. The script now also looks
+at `~/.local/share/fonts/Menlo.ttc`, where the box keeps a copy. **That copy
+is not in this repo and must never be** — Menlo is Apple's face, licensed
+with the Mac; it travels by `scp`, not by git. Verified 2026-07-30: with the
+font in place, the box re-renders all twelve cards byte-identical to the
+Mac's.
+
+**Never let it substitute a font.** The script hard-fails (exit 1) when Menlo
+is missing, and that guard is load-bearing. `wrap()` sizes lines from a
+hardcoded Menlo advance width (`CHAR_W = 0.602`), so a substitute keeps
+Menlo's line breaks while drawing different glyph widths — and the prompt's
+`▮` (U+25AE) plus the subtitle italic may not exist in the fallback at all.
+Two cards shipped that way from the headless box (`the-least-american-thing-
+you-own`, `i-dont-trade-bitcoin-i-stack-the-blood`): a missing-glyph box
+where the cursor belongs, and on the first, an upright subtitle. Both fixed
+in `382a8e9`.
+
+**The tell, if it happens again:** re-render everything and check `git
+status`. Cards rendered in the same font as the committed ones come out
+byte-identical; only genuinely-changed cards show as modified. A card that
+changes when you didn't touch its post was rendered in the wrong font.
 
 Subtitles are capped at **two lines** — a third lands at y=506 and collides
 with the byline at y=512 — so long ones step 27px → 25px → 23px to fit. Before
@@ -137,9 +152,18 @@ npm run build && npx wrangler deploy
 
 **Then verify every new or changed asset over the wire.** `wrangler` has
 reported a clean success while silently skipping a brand-new file, so a green
-deploy log is not evidence. `curl -sI` each changed URL and compare the served
-`content-length` against the local byte size — matching sizes, not a 200, is
-what proves the upload landed.
+deploy log is not evidence.
+
+**Download the bytes and hash them — don't trust headers.** Cloudflare omits
+`content-length` on `HEAD` for these assets, so a `curl -sI` size check reads
+empty and proves nothing:
+
+```
+curl -sL https://radvladdy.com/og/<file>.png -o /tmp/served.png
+md5sum /tmp/served.png public/og/<file>.png
+```
+
+Matching hashes are what prove the upload landed.
 
 ## Verify before push
 

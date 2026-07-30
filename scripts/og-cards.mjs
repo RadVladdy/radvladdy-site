@@ -1,13 +1,34 @@
 // Generates the per-post OG cards (1200x630 dark terminal cards: prompt
 // header, avatar, title/subtitle, posted/block byline, skyline silhouette).
-// Run LOCALLY (`npm run og`) and commit the PNGs — the script needs the
-// system Menlo face, so it never runs in CI. Pages without a card fall back
-// to images/skyline.jpg via the layout default.
-import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+// Run LOCALLY (`npm run og`) and commit the PNGs — the script needs the real
+// Menlo face, so it never runs in CI. Pages without a card fall back to
+// images/skyline.jpg via the layout default.
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 
 const W = 1200, H = 630, MARGIN = 80;
-const FONT = { fontFiles: ['/System/Library/Fonts/Menlo.ttc'], defaultFontFamily: 'Menlo', loadSystemFonts: false };
+
+// Menlo ships with macOS; on Linux it's a hand-placed copy under the user
+// font dir. That copy is deliberately NOT in this repo — the face is Apple's,
+// licensed with the machine, so it travels by scp and never by git. Paths are
+// resolved at runtime so no local absolute path is ever committed.
+const MENLO = [
+  '/System/Library/Fonts/Menlo.ttc',
+  join(homedir(), '.local', 'share', 'fonts', 'Menlo.ttc'),
+].find(existsSync);
+
+// Hard-fail rather than substitute. A fallback face keeps Menlo's line breaks
+// (CHAR_W below is hardcoded) while drawing different glyph widths, and may
+// lack the prompt's ▮ (U+25AE) or an italic face entirely — which is exactly
+// how two cards shipped with a tofu box and an upright subtitle.
+if (!MENLO) {
+  console.error('Menlo not found. Install it at ~/.local/share/fonts/Menlo.ttc — see CLAUDE.md § OG cards.');
+  process.exit(1);
+}
+
+const FONT = { fontFiles: [MENLO], defaultFontFamily: 'Menlo', loadSystemFonts: false };
 const CHAR_W = 0.602; // Menlo advance width per em
 
 const esc = (s) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
