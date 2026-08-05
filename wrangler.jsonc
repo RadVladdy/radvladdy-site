@@ -5,5 +5,12 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
-  }
+  },
+  // Custom Domain — the hostname binding lives HERE as well as in Cloudflare, so
+  // the repo describes the whole deployed thing rather than half of it. All three
+  // Workers use this same shape (declared 2026-08-05; the bindings themselves are
+  // older, they were simply never written down).
+  "routes": [
+    { "pattern": "radvladdy.com", "custom_domain": true }
+  ]
 }

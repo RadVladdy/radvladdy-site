@@ -142,13 +142,25 @@ Typo-level edits: same mechanics, lighter disclosure. Periodically run
 
 ## Deploying
 
-**Workers Builds CI has never fired — nine pushes, nine no-ops.** Treat `git
-push` as source control only; it publishes nothing. The real deploy is:
+**`git push` publishes nothing.** No repo is git-connected to Cloudflare; GitHub
+is history and backup. The deploy is one command, the same one in every site
+repo:
 
 ```
-source ~/.secrets/bea-cloudflare.env
-npm run build && npx wrangler deploy
+npm run deploy
 ```
+
+That builds, then runs `scripts/deploy.sh`, which sources the Cloudflare token
+itself — nothing to `source` first. This site is a **Worker**, so the script uses
+`~/secure/cloudflare-api-token`; a Pages-scoped token cannot deploy a Worker and
+fails with `Authentication error [code: 10000]`.
+
+*Superseded 2026-08-05: this section used to say `source ~/.secrets/bea-cloudflare.env`
+then `npx wrangler deploy`, and led with "Workers Builds CI has never fired — nine
+pushes, nine no-ops". The command worked but was this repo's own private spelling of
+a thing every other repo does differently, and "CI has never fired" describes a
+connection that no longer exists at all. `scripts/check-deploy-wiring.py` now fails
+the push if this drifts again.*
 
 **Then verify every new or changed asset over the wire.** `wrangler` has
 reported a clean success while silently skipping a brand-new file, so a green

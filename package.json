@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "og": "node scripts/og-cards.mjs",
+    "deploy": "npm run build && bash scripts/deploy.sh",
     "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
