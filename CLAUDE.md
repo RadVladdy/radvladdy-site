@@ -151,9 +151,10 @@ npm run deploy
 ```
 
 That builds, then runs `scripts/deploy.sh`, which sources the Cloudflare token
-itself — nothing to `source` first. This site is a **Worker**, so the script uses
-`~/secure/cloudflare-api-token`; a Pages-scoped token cannot deploy a Worker and
-fails with `Authentication error [code: 10000]`.
+itself — nothing to `source` first. It reads `~/secure/cloudflare-deploy-token`,
+the single token every site repo now uses. *(There were briefly two half-scoped
+tokens, split by whether a site was a Worker or Pages; that split is gone, because
+copying the wrong one produced a deploy that could never authenticate.)*
 
 *Superseded 2026-08-05: this section used to say `source ~/.secrets/bea-cloudflare.env`
 then `npx wrangler deploy`, and led with "Workers Builds CI has never fired — nine
