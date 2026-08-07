@@ -54,23 +54,10 @@ export default {
         );
       }
     }
-    // /api/nodes — reachable-node count for /dash. Bitnodes has no CORS,
-    // so the worker proxies it; the edge caches the answer for 10 minutes.
-    if (url.pathname === '/api/nodes') {
-      try {
-        const res = await fetch('https://bitnodes.io/api/v1/snapshots/latest/', {
-          // bitnodes sits behind bot protection that rejects UA-less fetches
-          headers: { accept: 'application/json', 'user-agent': 'radvladdy-dash/1.0 (https://radvladdy.com)' },
-          cf: { cacheTtl: 600, cacheEverything: true },
-        });
-        const { total_nodes } = await res.json();
-        return new Response(JSON.stringify({ total_nodes }), {
-          headers: { ...JSON_HEADERS, 'cache-control': 'public, max-age=600' },
-        });
-      } catch {
-        return new Response(JSON.stringify({ total_nodes: null }), { status: 502, headers: JSON_HEADERS });
-      }
-    }
+    // /api/nodes is GONE (2026-08-07). It proxied bitnodes.io for
+    // /dash's reachable-node cell — CORS was the reason it needed a proxy at all —
+    // and bitnodes.io no longer resolves anywhere, so the route could only ever
+    // return null. The cell went with it; see the note in src/pages/dash.astro.
 
     // /nostr/<bech32 entity> — clean njump-style URLs for the nostr viewer.
     // No asset matches these paths, so the worker serves the /nostr/id shell;

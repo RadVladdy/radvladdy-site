@@ -2,14 +2,22 @@
 // The chain dashboard — Clark Moody school: tight section blocks, dense
 // label/value cells, bitcoin-orange values. Client-side data, refreshed
 // every 60s. Sources: mempool.space (primary) + blockchain.info charts
-// (chain size, transaction counts) + bitnodes (reachable nodes) — this
-// page is the one place the site calls beyond mempool.space.
+// (chain size, transaction counts) — this page is the one place the site
+// calls beyond mempool.space.
+//
+// The 'reachable nodes' cell was DROPPED 2026-08-07. Its only source,
+// bitnodes.io, is gone — no A record at any public resolver since ~2026-06-11 —
+// so the cell could never self-heal and had read blank for eight weeks. Nothing
+// broke in that time, which is the measure of what it was worth. Blockchair's
+// `nodes` field is NOT a substitute: it counts a different population. If a
+// trustworthy reachable-node index appears, re-add the cell and a worker proxy
+// (the old one lived at /api/nodes; CORS is why it needed proxying at all).
 import Site from '../layouts/Site.astro';
 
 const sections = [
   { name: 'markets', cells: [['price', 'price'], ['moscow time', 'mosc'], ['market cap', 'mcap']] },
   { name: 'supply', cells: [['money supply', 'supply'], ['percent issued', 'issued'], ['issuance remaining', 'remain']] },
-  { name: 'blockchain', cells: [['block height', 'height'], ['chain size', 'csize'], ['reachable nodes', 'nodes']] },
+  { name: 'blockchain', cells: [['block height', 'height'], ['chain size', 'csize']] },
   { name: 'transactions', cells: [['total · all time', 'txtotal'], ['rate', 'txrate'], ['30 days', 'tx30']] },
   { name: 'mempool', cells: [['transactions', 'memn'], ['since last block', 'tip'], ['min fee', 'fmin'], ['fast', 'f1'], ['30 min', 'f2'], ['1 hour', 'f3'], ['economy', 'f4']] },
   { name: 'mining', cells: [['difficulty', 'diff'], ['diff epoch', 'depoch'], ['last change', 'dprev'], ['est change', 'dnext'], ['blocks to retarget', 'dblocks'], ['retarget date', 'ddate'], ['block time', 'btime']] },
@@ -27,7 +35,7 @@ const sections = [
   <h1>Chain dashboard</h1>
   <p class="intro">
     Live, client-side, refreshed every 60s — <a href="https://mempool.space">mempool.space</a>
-    + <a href="https://www.blockchain.com/charts">blockchain.info</a> + <a href="https://bitnodes.io">bitnodes</a>.
+    + <a href="https://www.blockchain.com/charts">blockchain.info</a>.
     <span id="d-upd" class="dim"></span>
   </p>
 
@@ -78,7 +86,7 @@ const sections = [
       };
 
       async function refresh() {
-        const [hRaw, prices, fees, mem, diff, mining, ln, blocks, csize, txTotal, tx30, nodes] =
+        const [hRaw, prices, fees, mem, diff, mining, ln, blocks, csize, txTotal, tx30] =
           (await Promise.allSettled([
             tget(M + '/blocks/tip/height'),
             jget(M + '/v1/prices'),
@@ -91,7 +99,6 @@ const sections = [
             jget('https://api.blockchain.info/charts/blocks-size?timespan=30days&cors=true'),
             jget('https://api.blockchain.info/charts/n-transactions-total?timespan=30days&cors=true'),
             jget('https://api.blockchain.info/charts/n-transactions?timespan=30days&cors=true'),
-            jget('/api/nodes'),
           ])).map((r) => (r.status === 'fulfilled' ? r.value : null));
 
         const usd = prices ? prices.USD : null;
@@ -160,7 +167,6 @@ const sections = [
           set('tx30', (sum / 1e6).toFixed(1) + ' M');
           set('txrate', (tx30.values.at(-1).y / 86400).toFixed(1) + ' tx/s');
         }
-        if (nodes && nodes.total_nodes) set('nodes', fmt(nodes.total_nodes));
         if (blocks) {
           set('tip', ago(blocks[0].timestamp));
           $('d-blocks').innerHTML = blocks.slice(0, 8).map((b) => '<tr>' +
