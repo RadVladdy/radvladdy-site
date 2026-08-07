@@ -1,5 +1,9 @@
 ---
 import Site from '../layouts/Site.astro';
+// ~/connect: the X row is DELINKED — the account was suspended 2026-08-07 and a live
+// href would send visitors to a suspension banner. The row stays (deleting an identity
+// reads worse than showing one that is down). To restore: put the href back and drop
+// the .is-down class. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
 const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
 ---
 <Site
@@ -18,7 +22,7 @@ const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
   <p class="sec-label">~/social</p>
   <a class="list-item" href="/nostr"><span class="t">nostr</span><span class="d">where I actually live</span></a>
   <a class="list-item" href="https://stacker.news/RadVladdy21"><span class="t">stacker news</span><span class="d">@RadVladdy21</span></a>
-  <a class="list-item" href="https://x.com/radvladdy"><span class="t">x</span><span class="d">@radvladdy</span></a>
+  <a class="list-item is-down"><span class="t">x</span><span class="d">@radvladdy · suspended</span></a>
 
   <p class="sec-label" style="margin-top: 34px;">~/identity rails</p>
   <div class="nv-idrow">

@@ -139,6 +139,10 @@ const {
       .list-item .t { color: var(--text); font-size: 15px; }
       .list-item .d { color: var(--dim); font-size: 12px; white-space: nowrap; }
       .list-item:hover .t { color: var(--cyan); }
+      /* A channel that exists but is currently unreachable: still listed, not clickable,
+         and not pretending to be (no hover lift, no pointer). */
+      .list-item.is-down { cursor: default; }
+      .list-item.is-down .t, .list-item.is-down:hover .t { color: var(--dim); }
       .pill {
         font-size: 11px; padding: 1px 8px; border-radius: 4px; border: 1px solid var(--dim);
         color: var(--dim); white-space: nowrap;

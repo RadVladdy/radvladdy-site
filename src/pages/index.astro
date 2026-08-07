@@ -1,5 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+// ~/connect: the X row is DELINKED — the account was suspended 2026-08-07 and a live
+// href would send visitors to a suspension banner. The row stays (deleting an identity
+// reads worse than showing one that is down). To restore: put the href back and drop
+// the .is-down class. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
 const latest = (await getCollection('writing'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -160,7 +164,7 @@ const latest = (await getCollection('writing'))
         <ul class="links">
           <li><a href="/nostr">nostr <span class="dim">— where I actually live</span></a></li>
           <li><a href="https://stacker.news/RadVladdy21">stacker news <span class="dim">— @RadVladdy21</span></a></li>
-          <li><a href="https://x.com/radvladdy">x <span class="dim">— @radvladdy</span></a></li>
+          <li><a class="is-down">x <span class="dim">— @radvladdy · suspended</span></a></li>
         </ul>
       </section>
     </main>
@@ -372,6 +376,11 @@ const latest = (await getCollection('writing'))
         text-decoration: none; font-size: 14px;
       }
       .links a:hover { color: var(--cyan); }
+      /* A channel that exists but is currently unreachable: still listed (deleting an
+         identity reads worse than showing one that is down), but not clickable and not
+         pretending to be. */
+      .links a.is-down { color: var(--dim); cursor: default; }
+      .links a.is-down:hover { color: var(--dim); }
       footer {
         display: flex; flex-wrap: wrap; gap: 6px 24px; justify-content: space-between;
         max-width: 760px; margin: 30px auto 0; padding: 16px 20px 28px;
