@@ -3,6 +3,18 @@ import { getCollection } from 'astro:content';
 const latest = (await getCollection('writing'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+
+// The <head> here is kept in sync with Site.astro BY HAND: the homepage builds its
+// own head rather than using the shared layout, so an icon change must be made twice.
+//
+// The Cloudflare Web Analytics beacon is hard-wired rather than left to the zone's
+// auto-install, which does not reach Pages/Workers-served responses — the beacon never
+// landed that way. It is cookieless and collects no personal data.
+//
+// The timechain card uses the flat single-weight mark, not the sunburst variant: at
+// 40px the rays are hairline and do not resolve, reading as haze beside the flat marks
+// on the other two cards. To put the sunburst back, swap to logo-timechain-rays.png
+// with class "logo rays" at 42x40.
 ---
 <!doctype html>
 <html lang="en">
@@ -11,8 +23,6 @@ const latest = (await getCollection('writing'))
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RadVladdy — signal from the Bitcoin frontier</title>
     <meta name="description" content="Pseudonymous bitcoiner. Writing, projects, and signal from the Bitcoin frontier." />
-    <!-- Kept in sync with Site.astro — the homepage builds its own head rather
-         than using the shared layout, so icon changes must be made twice. -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=3" />
@@ -26,9 +36,6 @@ const latest = (await getCollection('writing'))
     <meta property="og:image" content="https://radvladdy.com/images/avatar.jpg" />
     <meta name="twitter:card" content="summary" />
     <meta name="lightning" content="rad@radvladdy.com" />
-      <!-- Cloudflare Web Analytics - cookieless, no personal data.
-         Hard-wired because the zone's auto-install does not reach
-         Pages/Workers-served responses, so the beacon never landed. -->
     <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon='{"token": "b12992e49de846e6b9a935c6f2295e0f"}'></script>
   </head>
@@ -117,10 +124,6 @@ const latest = (await getCollection('writing'))
           <a class="card" href="https://timechain.wiki">
             <span class="status live">live</span>
             <span class="card-head">
-              <!-- Sunburst variant tried 2026-07-28, reverted 2026-07-29: at 40px the
-                   rays are hairline and don't resolve — they read as haze next to the
-                   flat, single-weight marks on the other two cards. To put it back:
-                   swap to logo-timechain-rays.png, class "logo rays", 42x40. -->
               <img class="logo tall" src="/images/logo-timechain.png" alt="" width="46" height="34" decoding="async">
               <span class="card-name">timechain.wiki</span>
             </span>

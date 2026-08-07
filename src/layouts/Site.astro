@@ -9,6 +9,14 @@ const {
   description = 'RadVladdy — writing, projects, and signal from the Bitcoin frontier.',
   ogImage = 'https://radvladdy.com/images/skyline.jpg',
 } = Astro.props;
+
+// The icons in <head> are the avatar's glowing eye, cropped and darkened. Crawlers
+// fetch /favicon.ico by convention regardless of these tags, so a real one lives
+// there too. Sizes stop at 180: the source is 512px and this is a 140px crop of it.
+//
+// The Cloudflare Web Analytics beacon is hard-wired rather than left to the zone's
+// auto-install, which does not reach Pages-served responses — the beacon never
+// actually landed that way. It is cookieless and collects no personal data.
 ---
 <!doctype html>
 <html lang="en">
@@ -17,10 +25,6 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <!-- The avatar's glowing eye, cropped and darkened. Crawlers fetch
-         /favicon.ico by convention regardless of these tags, so a real one
-         lives there too. Sizes stop at 180 — the source is 512px and this is a
-         140px crop of it. -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=3" />
@@ -33,9 +37,6 @@ const {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="lightning" content="rad@radvladdy.com" />
     <link rel="alternate" type="application/rss+xml" title="RadVladdy" href="/rss.xml" />
-      <!-- Cloudflare Web Analytics - cookieless, no personal data.
-         Hard-wired because the zone's auto-install does not reach
-         Pages-served responses, so the beacon never actually landed. -->
     <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon='{"token": "b12992e49de846e6b9a935c6f2295e0f"}'></script>
   </head>
