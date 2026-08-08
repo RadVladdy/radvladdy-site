@@ -3,8 +3,10 @@
 // native WebSocket, and query helpers. Display-only viewer: events are not
 // signature-verified in the browser (v2 = worker-side SSR can add that).
 
-export const RELAYS = ['wss://nos.lol', 'wss://relay.damus.io', 'wss://relay.primal.net'];
-export const RAD_PUBKEY = '7933ea1abdb329139b4eb37157649229b41d0ae445907238b07926182f717924';
+// Identity + relays are GENERATED from the Nostr registry (nostr-publisher) —
+// this file carried its own literals until 2026-08-08. Healthy relays sort
+// first; the degraded one rides last for reach, never load-bearing.
+export { RELAYS, RAD_PUBKEY } from './nostr-registry.generated.js';
 
 // ---- bech32 (BIP-173, no length cap per NIP-19) ----
 

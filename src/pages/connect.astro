@@ -4,7 +4,8 @@ import Site from '../layouts/Site.astro';
 // href would send visitors to a suspension banner. The row stays (deleting an identity
 // reads worse than showing one that is down). To restore: put the href back and drop
 // the .is-down class. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
-const npub = 'npub10ye75x4akv538x6wkdc4weyj9x6p6zhygkg8yw9s0ynpstm30yjqpy6l7q';
+import { RAD_NPUB } from '../../public/js/nostr-registry.generated.js';
+const npub = RAD_NPUB; // generated from the Nostr registry — never retyped here
 ---
 <Site
   title="connect — RadVladdy"
