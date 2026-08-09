@@ -32,7 +32,7 @@ CONFIG = {
     "nip05": {
         "path": "public/.well-known/nostr.json",
         "names": {"_": "rad", "rad": "rad"},
-        "relay_accounts": [],
+        "relay_accounts": ["rad"],
     },
 }
 # -----------------------------------------------------------------------------
