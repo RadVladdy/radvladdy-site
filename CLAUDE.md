@@ -108,7 +108,7 @@ was hardcoded to `/System/Library/Fonts/Menlo.ttc`. The script now also looks
 at `~/.local/share/fonts/Menlo.ttc`, where the box keeps a copy. **That copy
 is not in this repo and must never be** — Menlo is Apple's face, licensed
 with the Mac; it travels by `scp`, not by git. Verified 2026-07-30: with the
-font in place, the box re-renders all twelve cards byte-identical to the
+font in place, the box re-renders all thirteen cards byte-identical to the
 Mac's.
 
 **Never let it substitute a font.** The script hard-fails (exit 1) when Menlo
