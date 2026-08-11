@@ -1,9 +1,9 @@
 ---
 import Site from '../layouts/Site.astro';
-// ~/connect: the X row is DELINKED — the account was suspended 2026-08-07 and a live
-// href would send visitors to a suspension banner. The row stays (deleting an identity
-// reads worse than showing one that is down). To restore: put the href back and drop
-// the .is-down class. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
+// ~/connect: the X row is LINKED again. It was delinked 2026-08-07 when the account was
+// suspended and a live href would have sent visitors to a suspension banner; X reviewed
+// the appeal, found no violation and restored the account on 2026-08-10, so the href and
+// the normal styling are back. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
 import { RAD_NPUB } from '../../public/js/nostr-registry.generated.js';
 const npub = RAD_NPUB; // generated from the Nostr registry — never retyped here
 ---
@@ -23,7 +23,7 @@ const npub = RAD_NPUB; // generated from the Nostr registry — never retyped he
   <p class="sec-label">~/social</p>
   <a class="list-item" href="/nostr"><span class="t">nostr</span><span class="d">where I actually live</span></a>
   <a class="list-item" href="https://stacker.news/RadVladdy21"><span class="t">stacker news</span><span class="d">@RadVladdy21</span></a>
-  <a class="list-item is-down"><span class="t">x</span><span class="d">@radvladdy · suspended</span></a>
+  <a class="list-item" href="https://x.com/radvladdy"><span class="t">x</span><span class="d">@radvladdy</span></a>
 
   <p class="sec-label" style="margin-top: 34px;">~/identity rails</p>
   <div class="nv-idrow">

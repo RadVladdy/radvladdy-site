@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-// ~/connect: the X row is DELINKED — the account was suspended 2026-08-07 and a live
-// href would send visitors to a suspension banner. The row stays (deleting an identity
-// reads worse than showing one that is down). To restore: put the href back and drop
-// the .is-down class. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
+// ~/connect: the X row is LINKED again. It was delinked 2026-08-07 when the account was
+// suspended and a live href would have sent visitors to a suspension banner; X reviewed
+// the appeal, found no violation and restored the account on 2026-08-10, so the href and
+// the normal styling are back. Record: vault _Progress-Social-Media / _Progress-RadVladdy-Site.
 const latest = (await getCollection('writing'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -164,7 +164,7 @@ const latest = (await getCollection('writing'))
         <ul class="links">
           <li><a href="/nostr">nostr <span class="dim">— where I actually live</span></a></li>
           <li><a href="https://stacker.news/RadVladdy21">stacker news <span class="dim">— @RadVladdy21</span></a></li>
-          <li><a class="is-down">x <span class="dim">— @radvladdy · suspended</span></a></li>
+          <li><a href="https://x.com/radvladdy">x <span class="dim">— @radvladdy</span></a></li>
         </ul>
       </section>
     </main>
