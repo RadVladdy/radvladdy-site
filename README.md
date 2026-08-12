@@ -26,3 +26,12 @@ Deploys to Cloudflare on push to `main`.
 
 Phase A: interim one-pager (this). Phase B: full site — writing (essays,
 signal, recommendations), Nostr feed, chain dashboard.
+
+## Licence
+
+**Code: [MIT](LICENSE). Content: all rights reserved ([why](LICENSE-CONTENT)).**
+
+Fork the site machinery freely. The essays are not openly licensed — a
+deliberate difference from the sibling RadVladdy sites, which are CC BY 4.0.
+Quoting with attribution and a link needs no permission; wholesale
+republication or bulk ingestion is not granted.
