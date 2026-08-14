@@ -10,6 +10,43 @@ const {
   ogImage = 'https://radvladdy.com/images/skyline.jpg',
 } = Astro.props;
 
+// SELF-CANONICAL, derived per page rather than passed in.
+//
+// WHY IT IS HERE AND WAS NOT BEFORE. Every page on this site except the homepage
+// renders through this layout, and this layout emitted no canonical at all — so
+// 51 of 52 pages had none, while `index.astro` (which is standalone and builds
+// its own <head>) carried a hardcoded one. That is why a 2026-08-07 spot-check
+// recorded "a correct self-canonical" for this site: the page it sampled was the
+// only page that had one.
+//
+// It matters here more than it would on a static brochure site, because the nav
+// below links the NO-slash form while the sitemap emits the SLASH form, and this
+// site's Worker answers 307 — a TEMPORARY redirect — between them. Two URL forms
+// for every page, joined by a redirect that says "this is not the permanent
+// home", and nothing declaring which one is authoritative. The slash fix below
+// closes the other half; this closes the half that survives any future
+// link-form mistake.
+//
+// Derived from Astro.url so it cannot drift from the route: a hand-passed
+// canonical is a second copy of the URL, and second copies go stale silently.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+// ⚠️ TRAILING SLASHES IN THE NAV BELOW ARE LOAD-BEARING — the visible label drops
+// them, the href must not. The sitemap emits `/writing/`; this Worker answers 307
+// on `/writing`. So every nav link on every page used to exercise a TEMPORARY
+// redirect on every crawl, while the sitemap advertised the destination — two
+// forms of every URL, joined by a redirect that declines to say which is
+// permanent. _Standards-Projects § "How every site talks to Google" deliberately
+// leaves the 307s alone, on the stated premise that "sitemaps, canonicals and
+// internal links all name the canonical form, so the 307 is almost never
+// exercised." That premise was FALSE on this site, and this is the new evidence
+// that row asks for before harmonising anything.
+//
+// FIVE slashless links remain, all inside OTS-stamped essay bodies in
+// src/content/writing/. They are deliberately NOT fixed: editing a stamped post
+// breaks its timestamp proof, and five link slashes are not worth five broken
+// proofs on the site whose own /verify page is the argument for having them.
+
 // The icons in <head> are the avatar's glowing eye, cropped and darkened. Crawlers
 // fetch /favicon.ico by convention regardless of these tags, so a real one lives
 // there too. Sizes stop at 180: the source is 512px and this is a 140px crop of it.
@@ -29,7 +66,9 @@ const {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=3" />
     <link rel="apple-touch-icon" href="/favicon-180.png?v=3" />
+    <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0b0f14" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
@@ -45,12 +84,12 @@ const {
     <header>
       <a class="prompt" href="/">rad@radvladdy<span class="cy">:~$</span><span class="cursor cy">▮</span></a>
       <nav>
-        <a href="/writing">/writing</a>
-        <a href="/library">/library</a>
-        <a href="/archive">/archive</a>
-        <a href="/nostr">/nostr</a>
-        <a href="/dash">/dash</a>
-        <a href="/connect">/connect</a>
+        <a href="/writing/">/writing</a>
+        <a href="/library/">/library</a>
+        <a href="/archive/">/archive</a>
+        <a href="/nostr/">/nostr</a>
+        <a href="/dash/">/dash</a>
+        <a href="/connect/">/connect</a>
       </nav>
     </header>
     <main>
@@ -58,7 +97,7 @@ const {
     </main>
     <footer>
       <span><span class="cy">⚡ rad@radvladdy.com</span> <span class="dim">· nip-05 · zaps</span></span>
-      <span class="dim"><a href="/rss.xml">rss</a> · <a href="/verify">verify</a> · <a href="https://github.com/RadVladdy/radvladdy-site" rel="noopener">source</a> <span title="The site code is MIT. The writing is not openly licensed.">(MIT)</span> · tick tock next block</span>
+      <span class="dim"><a href="/rss.xml">rss</a> · <a href="/verify/">verify</a> · <a href="https://github.com/RadVladdy/radvladdy-site" rel="noopener">source</a> <span title="The site code is MIT. The writing is not openly licensed.">(MIT)</span> · tick tock next block</span>
     </footer>
     <style is:global>
       :root {

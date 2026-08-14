@@ -24,7 +24,7 @@ const nostrPointer = nostrPosts[post.id];
   {post.data.subtitle && <p class="post-subtitle">{post.data.subtitle}</p>}
   <p class="byline">
     posted {date}{block && <> · block {block.toLocaleString('en-US')}</>} ·
-    <a href={proof}> proof ↗</a> · <a href={source}>source</a> · <a href="/verify">how to verify</a>
+    <a href={proof}> proof ↗</a> · <a href={source}>source</a> · <a href="/verify/">how to verify</a>
   </p>
   <div class="prose">
     <Content />
