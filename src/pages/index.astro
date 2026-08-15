@@ -147,7 +147,7 @@ const latest = (await getCollection('writing'))
       <section id="writing">
         <p class="sec-label">~/writing — latest</p>
         {latest.map((p) => (
-          <a class="post-row" href={`/writing/${p.id}`}>
+          <a class="post-row" href={`/writing/${p.id}/`}>
             <span class="post-title">{p.data.title}</span>
             <span class="post-date">{p.data.date.toISOString().slice(0, 10)}</span>
           </a>

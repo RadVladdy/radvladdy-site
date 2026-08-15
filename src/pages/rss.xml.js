@@ -13,7 +13,7 @@ export async function GET(context) {
       title: p.data.title,
       description: p.data.subtitle ?? '',
       pubDate: p.data.date,
-      link: `/writing/${p.id}`,
+      link: `/writing/${p.id}/`,
     })),
   });
 }

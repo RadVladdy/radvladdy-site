@@ -42,10 +42,28 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // exercised." That premise was FALSE on this site, and this is the new evidence
 // that row asks for before harmonising anything.
 //
-// FIVE slashless links remain, all inside OTS-stamped essay bodies in
-// src/content/writing/. They are deliberately NOT fixed: editing a stamped post
-// breaks its timestamp proof, and five link slashes are not worth five broken
-// proofs on the site whose own /verify page is the argument for having them.
+// SIX slashless links remain, all inside OTS-stamped essay bodies in
+// src/content/writing/ (four distinct targets). They are deliberately NOT fixed:
+// editing a stamped post breaks its timestamp proof, and six link slashes are not
+// worth four broken proofs on the site whose own /verify page is the argument for
+// having them.
+//
+// ⚠️ THE ORIGINAL FIX MISSED THE LINKS THAT MATTERED MOST, and the comment here
+// is why it read as complete (found 2026-08-15, before the deploy). Fixing "the
+// nav" fixed the nav — but the essay links are not nav, they are GENERATED, in
+// three places: `pages/index.astro` (homepage latest-writing rows),
+// `pages/writing/index.astro` (the essay index) and `rss.xml.js`. All three
+// emitted `/writing/${p.id}` with no slash, which put a 307 on the path a crawler
+// actually takes to reach all thirteen essays — including from `/writing/` itself,
+// the one page the Request-Indexing step is aimed at because Google has never seen
+// the essays behind it. So the site kept exactly the defect the fix was written to
+// remove, on the highest-value links, while both the nav and this comment said it
+// was handled. All three now emit the trailing-slash form.
+//
+// The general shape, worth more than the three characters: a fix scoped to a
+// SURFACE ("the nav") leaves every other emitter of the same URL untouched, and
+// the count in a comment is the thing that makes it look finished. Grep the built
+// output for the slashless form, not the source for the component you edited.
 
 // The icons in <head> are the avatar's glowing eye, cropped and darkened. Crawlers
 // fetch /favicon.ico by convention regardless of these tags, so a real one lives

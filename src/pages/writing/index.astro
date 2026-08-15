@@ -13,7 +13,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
   </p>
   <div style="margin-top: 18px;">
     {posts.map((p) => (
-      <a class="list-item" href={`/writing/${p.id}`}>
+      <a class="list-item" href={`/writing/${p.id}/`}>
         <span>
           <span class="t">{p.data.title}</span>
           {p.data.subtitle && <span class="dim" style="display:block; font-size:13px;">{p.data.subtitle}</span>}
