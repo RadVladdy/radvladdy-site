@@ -47,7 +47,7 @@ kind: repost
 
 
 
-<div><a href="https://radvladdy.com/wp-content/uploads/2020/01/Bitcoin-in-Heavy-Accumulation.pdf">Bitcoin in Heavy Accumulation </a><a href="https://radvladdy.com/wp-content/uploads/2020/01/Bitcoin-in-Heavy-Accumulation.pdf" download>Download</a></div>
+<div>Bitcoin in Heavy Accumulation Download</div>
 
 
 

@@ -321,7 +321,7 @@ kind: original
 
 
 <div>
-<p>Next: <a href="https://radvladdy.com/bitcoin-education/bitcoin-102-the-bullish-case-for-bitcoin-by-vijay-boyapati/?customize_changeset_uuid=80f1f896-8c8e-4b5d-b381-68b1ee5217eb&amp;customize_autosaved=on&amp;customize_messenger_channel=preview-1">Bitcoin 102 – The Bullish Case for Bitcoin – Vijay Boyapati</a></p>
+<p>Next: Bitcoin 102 – The Bullish Case for Bitcoin – Vijay Boyapati</p>
 </div>
 </div>
 

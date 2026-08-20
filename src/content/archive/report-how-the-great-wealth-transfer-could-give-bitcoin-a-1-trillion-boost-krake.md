@@ -20,7 +20,7 @@ kind: repost
 
 
 
-<div><a href="https://radvladdy.com/wp-content/uploads/2020/03/KI_Inheriting-USDs-and-Acquiring-BTCs-Mar_24_2020-1.pdf">Download: How “The Great Wealth Transfer” Will Fuel “The Great Bitcoin Adoption”</a><a href="https://radvladdy.com/wp-content/uploads/2020/03/KI_Inheriting-USDs-and-Acquiring-BTCs-Mar_24_2020-1.pdf" download>Download</a></div>
+<div>Download: How “The Great Wealth Transfer” Will Fuel “The Great Bitcoin Adoption”Download</div>
 
 
 

@@ -158,13 +158,13 @@ kind: repost
 
 <div>
 <div>
-<p>Previous: <a href="https://radvladdy.com/bitcoin-education/bitcoin-101-what-is-bitcoin/">Bitcoin 101 – What is Bitcoin?</a></p>
+<p>Previous: Bitcoin 101 – What is Bitcoin?</p>
 </div>
 
 
 
 <div>
-<p>Next: <a href="https://radvladdy.com/bitcoin-education/why-bitcoin-now-bitcointina/">Bitcoin 103 &#8211; Why Bitcoin Now – BitcoinTINA</a></p>
+<p>Next: Bitcoin 103 &#8211; Why Bitcoin Now – BitcoinTINA</p>
 </div>
 </div>
 

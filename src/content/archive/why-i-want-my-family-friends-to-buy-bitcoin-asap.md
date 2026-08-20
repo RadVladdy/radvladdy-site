@@ -52,7 +52,7 @@ financial crisis, it’ll make it an undeniable safe-haven asset</li></ul>
 
 
 
-<ul><li>In <em><strong><a href="https://radvladdy.com/the-bitcoin-standard-the-decentralized-alternative-to-central-banking/" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)">The Bitcoin Standard</a></strong></em>, author Saifedean Ammous describes the scarcity of a commodity in terms of its Stock-to-Flow (SF) ratio </li></ul>
+<ul><li>In <em><strong>The Bitcoin Standard</strong></em>, author Saifedean Ammous describes the scarcity of a commodity in terms of its Stock-to-Flow (SF) ratio </li></ul>
 
 
 

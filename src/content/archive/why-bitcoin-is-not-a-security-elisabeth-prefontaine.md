@@ -18,7 +18,7 @@ kind: repost
 
 
 
-<div><a href="https://radvladdy.com/wp-content/uploads/2020/02/Octonomics-Bitcoin-security-legality.pdf">Octonomics Bitcoin security legality</a><a href="https://radvladdy.com/wp-content/uploads/2020/02/Octonomics-Bitcoin-security-legality.pdf" download>Download</a></div>
+<div>Octonomics Bitcoin security legalityDownload</div>
 
 
 
@@ -245,7 +245,7 @@ are valuable attributes. Accordingly, bitcoin is often referred to as
 
 
 
-<p>The curious reader will probably enjoy <a href="https://radvladdy.com/bitcoin-203-the-origins-of-money-szabo/"><em>Shelling Out: The origins of Money </em>by Nick Szabo</a>.  A special consideration must be paid to the concept of unforgeable  costliness in the context of the energy consumption as it anchors  Bitcoin is the physical world. Proof-of-work (energy consumption), the  difficulty adjustment and the monetary policy are important concepts to  understand in order to draw parallels and grasp the comparison with  digital gold and to unbundle bitcoin from other crypto-assets.</p>
+<p>The curious reader will probably enjoy <em>Shelling Out: The origins of Money </em>by Nick Szabo.  A special consideration must be paid to the concept of unforgeable  costliness in the context of the energy consumption as it anchors  Bitcoin is the physical world. Proof-of-work (energy consumption), the  difficulty adjustment and the monetary policy are important concepts to  understand in order to draw parallels and grasp the comparison with  digital gold and to unbundle bitcoin from other crypto-assets.</p>
 
 
 
