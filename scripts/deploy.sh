@@ -38,6 +38,27 @@ npx wrangler deploy
 
 echo "── deployed. Verify on the live domain before calling it done."
 
+# ── Drop the edge cache, then PROVE the edge matches origin ───────────────────
+# A green wrangler log plus a stale edge is indistinguishable from a fix that
+# does not work. It happened here twice — the 2026-08-15 canonical fix and the
+# 2026-08-20 archive-404 fix — and both times the live site served the OLD HTML
+# under `cf-cache-status: HIT` while the origin was already correct. Both times
+# it was purged by hand afterwards, by someone who thought to check.
+#
+# The lesson was written down the first time and changed nothing, because it was
+# recorded as knowledge and never wired as behaviour. This is the wiring.
+#
+# ⚠️ IT RUNS BEFORE INDEXNOW ON PURPOSE. Telling six search engines to come and
+# index right now, while the edge is still handing out the previous version, is
+# worse than not telling them — it banks the stale page.
+#
+# A failure here must NOT fail the deploy: the site is already live, and the
+# fault this reports is a cache, not a bad ship. But it must not be silent, and
+# `cf-purge verify` is the half that can actually go red — it compares a
+# cache-busted fetch against an ordinary one, because a plain check can be
+# answered by the very cache it is meant to catch.
+"$HOME/bin/cf-purge" deploy radvladdy.com || echo "── ⚠️ CACHE PURGE/VERIFY FAILED — the deploy itself was fine. Do not call it live until: cf-purge deploy radvladdy.com"
+
 # ── Tell the non-Google engines, immediately ──────────────────────────────────
 # IndexNow reaches Bing, Yandex, Naver, Seznam.cz, Yep and DuckDuckGo in one
 # call. NOT Google, which declined to adopt it — Google discovers this deploy on
