@@ -42,11 +42,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // exercised." That premise was FALSE on this site, and this is the new evidence
 // that row asks for before harmonising anything.
 //
-// SIX slashless links remain, all inside OTS-stamped essay bodies in
-// src/content/writing/ (four distinct targets). They are deliberately NOT fixed:
-// editing a stamped post breaks its timestamp proof, and six link slashes are not
-// worth four broken proofs on the site whose own /verify page is the argument for
-// having them.
+// The slashless links inside OTS-stamped essay bodies (twelve, in eight essays,
+// eight distinct targets — this comment said "six … four" until 2026-09-14, which
+// is its own lesson about counting by hand) are fixed at RENDER time, not in the
+// source: scripts/trailing-slash.mjs rewrites the href in the built HTML and the
+// stamped bytes stay identical, so every proof holds. And the archive index —
+// all 30 posts — was slashless until 2026-09-14 too, under this comment's claim
+// that the matter was handled. scripts/check-internal-links.mjs now reads every
+// href on every built page before a deploy can happen.
 //
 // ⚠️ THE ORIGINAL FIX MISSED THE LINKS THAT MATTERED MOST, and the comment here
 // is why it read as complete (found 2026-08-15, before the deploy). Fixing "the

@@ -17,7 +17,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
   </p>
   <div style="margin-top: 18px;">
     {posts.map((p) => (
-      <a class="list-item" href={`/archive/${p.id}`}>
+      <a class="list-item" href={`/archive/${p.id}/`}>
         <span class="t">{p.data.title}</span>
         <span class="d">{fmt(p.data.date)} <span class={`pill ${p.data.kind}`}>{p.data.kind}</span></span>
       </a>

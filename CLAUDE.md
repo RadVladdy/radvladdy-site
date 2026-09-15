@@ -140,6 +140,15 @@ a published post breaks its proof.** Material edits require: edit → re-stamp
 Typo-level edits: same mechanics, lighter disclosure. Periodically run
 `ots upgrade` on the proofs once anchored and re-commit.
 
+**Internal links inside stamped posts are normalised at render time, never in
+the source.** `scripts/trailing-slash.mjs` (wired as a rehype plugin in
+`astro.config.mjs`) rewrites a slashless internal `href` to the trailing-slash
+form in the built HTML, because this Worker answers a *temporary* 307 between
+the two forms and a crawler must never reach a page through one. The stamped
+bytes stay identical. `scripts/check-internal-links.mjs` reads every `href` on
+every built page and blocks `npm run deploy` if any names the redirecting form
+— added 2026-09-14 after two "complete" slash fixes each missed a template.
+
 ## Deploying
 
 **`git push` publishes nothing.** No repo is git-connected to Cloudflare; GitHub
