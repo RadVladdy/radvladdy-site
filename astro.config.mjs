@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { unified } from '@astrojs/markdown-remark';
 import { buildLastmod } from './scripts/lastmod.mjs';
 import { rehypeTrailingSlash } from './scripts/trailing-slash.mjs';
 
@@ -15,5 +16,8 @@ export default defineConfig({
   // trailing-slash form here, at render time, so the OTS-stamped essay sources
   // stay byte-identical — see scripts/trailing-slash.mjs for why the form
   // matters (this Worker answers 307 between the two).
-  markdown: { rehypePlugins: [rehypeTrailingSlash] },
+  // Astro 7 defaults: Sätteri markdown + 'jsx' whitespace — both pinned back to
+  // the v6 behaviour so the upgrade changes no rendered output.
+  compressHTML: true,
+  markdown: { processor: unified(), rehypePlugins: [rehypeTrailingSlash] },
 });
